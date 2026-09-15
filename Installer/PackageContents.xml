@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Описание пакета плагина для автозагрузчика AutoCAD (Autoloader).
+  Токен {{Version}} заменяется скриптом tools/Build-Bundle.ps1 на версию из PanelKomplekt.csproj.
+  UpgradeCode не меняется никогда: по нему AutoCAD понимает, что это тот же плагин.
+-->
+<ApplicationPackage
+  SchemaVersion="1.0"
+  AutodeskProduct="AutoCAD"
+  ProductType="Application"
+  Name="PanelKomplekt"
+  Description="Раскладка сэндвич-панелей по фасадам и спецификация"
+  AppVersion="{{Version}}"
+  ProductCode="{C4A81F2E-9D35-4B70-8E6A-1F5B3D92A407}"
+  UpgradeCode="{7E3B2C51-4A9D-4F6E-9B1C-2D8A5F03C6E7}">
+
+  <CompanyDetails Name="PanelKomplekt" />
+
+  <!-- R24.0 = AutoCAD 2021 ... R24.3 = AutoCAD 2024 (одна платформа .NET Framework 4.8) -->
+  <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R24.0" SeriesMax="R24.3" />
+
+  <Components Description="PanelKomplekt">
+    <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R24.0" SeriesMax="R24.3" />
+    <!-- Загрузка при запуске AutoCAD: нужна, чтобы сразу появилась вкладка на ленте -->
+    <ComponentEntry
+      AppName="PanelKomplekt"
+      Version="{{Version}}"
+      ModuleName="./Contents/PanelKomplekt.dll"
+      AppDescription="Раскладка сэндвич-панелей по фасадам и спецификация"
+      LoadOnAutoCADStartup="True" />
+  </Components>
+</ApplicationPackage>

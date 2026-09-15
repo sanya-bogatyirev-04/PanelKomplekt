@@ -8,7 +8,7 @@ namespace PanelKomplekt.Commands
 {
     /// <summary>
     /// C100. Служебная команда: выводит название и версию плагина.
-    /// Документация: C100_About.txt в папке команды.
+    /// Документация: C100_About.md в папке команды.
     /// </summary>
     public class C100_About
     {

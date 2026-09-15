@@ -1,27 +1,50 @@
 # PanelKomplekt
 
-Плагин для AutoCAD 2021 (C#, .NET Framework 4.8, x64): раскладка сэндвич-панелей по фасадам и спецификация.
+Плагин для **AutoCAD 2021**: раскладка сэндвич-панелей по фасадам и спецификация.
+После установки в AutoCAD появляется вкладка **PanelKomplekt** с кнопками команд.
 
-## Документация
-- [Docs/DevelopmentRules.md](Docs/DevelopmentRules.md) — правила разработки (коммиты, именование, ветки).
-- [Docs/ProjectStructure.md](Docs/ProjectStructure.md) — структура проекта и список команд.
-- [Docs/CommandTemplate.txt](Docs/CommandTemplate.txt) — шаблон документации команды.
-- [Docs/CustomerQuestions.txt](Docs/CustomerQuestions.txt) — вопросы заказчику.
+Текущая версия и изменения — в [CHANGELOG.md](CHANGELOG.md). Незнакомые слова — в [словаре терминов](Docs/Glossary.md).
 
-## Разовая настройка AutoCAD (доверенные папки)
-В AutoCAD включена защита загрузки (`SECURELOAD = 1`), поэтому DLL и скрипты из чужих папок блокируются.
-1. AutoCAD → `ПАРАМЕТРЫ` (OPTIONS) → вкладка «Файлы» → «Надежные расположения».
-2. «Добавить» → `C:\Users\bogatyrev\source\repos\PanelKomplekt\PanelKomplekt\bin\Debug`.
-3. «Добавить» → `C:\Users\bogatyrev\source\repos\PanelKomplekt\tools`.
-4. OK.
+---
 
-## Отладка
-1. Открыть `PanelKomplekt.sln` в VS 2022, профиль запуска «AutoCAD 2021».
-2. F5: сборка → запуск AutoCAD → `start.scr` выполняет NETLOAD.
-3. На ленте появится вкладка «PanelKomplekt».
-4. Загруженную DLL выгрузить нельзя: после изменения кода закрыть AutoCAD и снова нажать F5.
+## Для пользователя AutoCAD
 
-## Сборка из командной строки
+### Установка
+1. Закройте AutoCAD.
+2. Распакуйте архив `PanelKomplekt-<версия>.zip` целиком.
+3. Дважды щёлкните `Install.cmd` и ответьте «Да» на вопрос Windows.
+4. Запустите AutoCAD 2021 — на ленте появится вкладка «PanelKomplekt».
+
+### Что умеет плагин
+| Кнопка | Что делает |
+|---|---|
+| О плагине | Показывает установленную версию плагина. |
+| ID элемента | Показывает ID выбранного элемента чертежа (тестовая). |
+
+Пошаговое описание каждой команды, обновление, удаление и решение проблем — в **[руководстве пользователя](Docs/UserGuide.md)**.
+
+---
+
+## Для программиста
+
+Плагин написан на C# (.NET Framework 4.8, x64) в Visual Studio 2022.
+
+| Документ | О чём |
+|---|---|
+| [Docs/DeveloperGuide.md](Docs/DeveloperGuide.md) | Настройка компьютера, сборка, отладка, новая команда, выпуск версии. **Начинать отсюда.** |
+| [Docs/DevelopmentRules.md](Docs/DevelopmentRules.md) | Обязательные правила: коммиты, именование, ветки, слияние. |
+| [Docs/ProjectStructure.md](Docs/ProjectStructure.md) | Структура папок, схема работы плагина, список команд. |
+| [Docs/CommandTemplate.md](Docs/CommandTemplate.md) | Шаблон описания команды. |
+| [Docs/Glossary.md](Docs/Glossary.md) | Словарь терминов. |
+| [CHANGELOG.md](CHANGELOG.md) | Журнал изменений. |
+
+Быстрый старт:
 ```
-dotnet build PanelKomplekt.sln -c Debug
+dotnet build PanelKomplekt.sln -c Debug                                   # сборка
+powershell -ExecutionPolicy Bypass -File tools\New-Command.ps1 ...        # новая команда
+powershell -ExecutionPolicy Bypass -File tools\Build-Bundle.ps1           # установочный архив в dist\
 ```
+
+---
+
+Закрытый проект, все права защищены — см. [LICENSE](LICENSE). Вопросы к заказчику — [Docs/CustomerQuestions.txt](Docs/CustomerQuestions.txt).

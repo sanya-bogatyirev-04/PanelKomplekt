@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>PanelKomplekt</RootNamespace>
+    <AssemblyName>PanelKomplekt</AssemblyName>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>0.1.0</Version>
+    <!-- Папка установки AutoCAD 2021: при другом пути поправить здесь -->
+    <AcadDir>C:\Program Files\Autodesk\AutoCAD 2021</AcadDir>
+  </PropertyGroup>
+
+  <!-- Отладка: VS запускает AutoCAD 2021 и скриптом start.scr загружает собранную DLL -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <StartAction>Program</StartAction>
+    <StartProgram>$(AcadDir)\acad.exe</StartProgram>
+    <StartArguments>/nologo /b "$(MSBuildProjectDirectory)\start.scr"</StartArguments>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="AcCoreMgd">
+      <HintPath>$(AcadDir)\accoremgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcDbMgd">
+      <HintPath>$(AcadDir)\acdbmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcMgd">
+      <HintPath>$(AcadDir)\acmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+	<Reference Include="AdWindows">
+	  <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
+	  <Private>False</Private>
+	</Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="start.scr" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+
+</Project>

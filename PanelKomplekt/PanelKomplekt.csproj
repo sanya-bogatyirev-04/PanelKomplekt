@@ -35,10 +35,10 @@
       <HintPath>$(AcadDir)\acmgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	<Reference Include="AdWindows">
-	  <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
-	  <Private>False</Private>
-	</Reference>
+    <Reference Include="AdWindows">
+      <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

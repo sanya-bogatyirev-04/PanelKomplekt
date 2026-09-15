@@ -11,7 +11,7 @@ namespace PanelKomplekt.Commands
     /// <summary>
     /// C101. Тестовая команда: пользователь выбирает один элемент,
     /// команда показывает всплывающее окно с его ID (дескриптор, Handle).
-    /// Документация: C101_ShowElementId.txt в папке команды.
+    /// Документация: C101_ShowElementId.md в папке команды.
     /// </summary>
     public class C101_ShowElementId
     {

@@ -1,0 +1,37 @@
+# Автосборка на GitHub.
+# - При каждом push в любую ветку: сборка и установочный архив (скачивается во вкладке Actions -> запуск -> Artifacts).
+# - При push тега вида v0.1.0: то же + создание релиза на странице Releases с архивом.
+# На сервере GitHub нет AutoCAD, поэтому библиотеки AutoCAD берутся из NuGet-пакета (см. PanelKomplekt.csproj).
+name: Сборка
+
+on:
+  push:
+    branches: ['**']
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Получение кода
+        uses: actions/checkout@v4
+
+      - name: Сборка и упаковка
+        shell: pwsh
+        run: ./tools/Build-Bundle.ps1
+
+      - name: Сохранение архива
+        uses: actions/upload-artifact@v4
+        with:
+          name: PanelKomplekt-bundle
+          path: dist/*.zip
+
+      - name: Релиз (только для тегов v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip

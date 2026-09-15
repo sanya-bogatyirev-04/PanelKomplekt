@@ -5,3 +5,6 @@ obj/
 *.bak
 *.dwl
 *.dwl2
+
+# Результат tools/Build-Bundle.ps1 (установочный архив)
+dist/

@@ -22,7 +22,8 @@
     <StartArguments>/nologo /b "$(MSBuildProjectDirectory)\start.scr"</StartArguments>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- Библиотеки AutoCAD из установленного AutoCAD 2021 (локальная разработка) -->
+  <ItemGroup Condition="Exists('$(AcadDir)\acmgd.dll')">
     <Reference Include="AcCoreMgd">
       <HintPath>$(AcadDir)\accoremgd.dll</HintPath>
       <Private>False</Private>
@@ -39,6 +40,11 @@
       <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+
+  <!-- AutoCAD не установлен (например, сборка на GitHub): те же библиотеки из NuGet, в папку сборки не копируются -->
+  <ItemGroup Condition="!Exists('$(AcadDir)\acmgd.dll')">
+    <PackageReference Include="AutoCAD.NET" Version="24.0.0" ExcludeAssets="runtime" />
   </ItemGroup>
 
   <ItemGroup>

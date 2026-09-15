@@ -13,6 +13,7 @@ namespace PanelKomplekt.Core
         public static IReadOnlyList<CommandInfo> All { get; } = new[]
         {
             C100_About.Info,
+            C101_ShowElementId.Info,
         };
     }
 }

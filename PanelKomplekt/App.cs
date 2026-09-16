@@ -1,6 +1,7 @@
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.Windows;
+using PanelKomplekt.Core;
 using PanelKomplekt.Ribbon;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
@@ -51,7 +52,7 @@ namespace PanelKomplekt
             var assembly = typeof(App).Assembly;
             var doc = AcApp.DocumentManager.MdiActiveDocument;
             doc?.Editor.WriteMessage(
-                $"\nPanelKomplekt {assembly.GetName().Version} загружен из {assembly.Location}\n" +
+                $"\n{PluginInfo.Name} {PluginInfo.Version} загружен из {assembly.Location}\n" +
                 "Вкладка «PanelKomplekt» на ленте.\n");
         }
 

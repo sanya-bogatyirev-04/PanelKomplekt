@@ -7,7 +7,7 @@
     2. Создаёт в ней код команды (.cs) и документацию (.md) по шаблону Docs\CommandTemplate.md.
     3. Добавляет команду в PanelKomplekt\Core\CommandCatalog.cs — кнопка появится на ленте.
     4. Добавляет строку в таблицу команд в Docs\ProjectStructure.md.
-    Дерево файлов в Docs\ProjectStructure.md и описание в .md нужно дописать вручную.
+    Дерево файлов в Docs\ProjectStructure.md, описание в .md и иконки кнопки нужно дописать вручную.
 
 .PARAMETER Number
     Номер команды: буква C и три цифры, например C201 (сотни — см. Docs\DevelopmentRules.md).
@@ -88,6 +88,7 @@ namespace PanelKomplekt.Commands
         /// <summary>Описание команды для ленты и каталога.</summary>
         public static readonly CommandInfo Info = new CommandInfo
         {
+            Key = nameof({{Name}}),
             Number = "{{Number}}",
             GlobalName = GlobalName,
             RibbonText = "{{RibbonText}}",
@@ -135,4 +136,5 @@ Write-Host "  $CommandDir"
 Write-Host 'Дальше:'
 Write-Host "  1. Дописать алгоритм в $FullName.cs и описание в $FullName.md."
 Write-Host '  2. Добавить папку команды в дерево в Docs\ProjectStructure.md.'
-Write-Host '  3. Собрать проект и проверить в AutoCAD.'
+Write-Host "  3. Добавить иконки $($FullName)_16.png и $($FullName)_32.png (tools\Generate-Icons.ps1)."
+Write-Host '  4. Собрать проект и проверить в AutoCAD.'

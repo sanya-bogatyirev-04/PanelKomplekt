@@ -21,6 +21,7 @@ namespace PanelKomplekt.Commands
         /// <summary>Описание команды для ленты и каталога.</summary>
         public static readonly CommandInfo Info = new CommandInfo
         {
+            Key = nameof(C101_ShowElementId),
             Number = "C101",
             GlobalName = GlobalName,
             RibbonText = "ID элемента",

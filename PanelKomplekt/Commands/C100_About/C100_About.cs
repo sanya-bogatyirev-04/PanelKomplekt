@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.Runtime;
+﻿using Autodesk.AutoCAD.Runtime;
 using PanelKomplekt.Core;
 
 // Регистрация класса команд: при наличии ExtensionApplication AutoCAD ищет команды только в перечисленных классах.
@@ -18,6 +18,7 @@ namespace PanelKomplekt.Commands
         /// <summary>Описание команды для ленты и каталога.</summary>
         public static readonly CommandInfo Info = new CommandInfo
         {
+            Key = nameof(C100_About),
             Number = "C100",
             GlobalName = GlobalName,
             RibbonText = "О плагине",

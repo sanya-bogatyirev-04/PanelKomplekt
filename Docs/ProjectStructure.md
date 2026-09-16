@@ -28,6 +28,7 @@ PanelKomplekt/                         корень репозитория
 │   └── ReadMe.txt                     краткая инструкция внутри архива
 ├── tools/                             вспомогательные скрипты
 │   ├── New-Command.ps1                заготовка новой команды
+│   ├── Generate-Icons.ps1             рисование иконок кнопок ленты (16 и 32 px)
 │   ├── Build-Bundle.ps1               сборка установочного архива в dist/
 │   ├── dump.lsp                       выгрузка содержимого DWG в текст
 │   └── dump.scr                       скрипт запуска dump.lsp
@@ -39,17 +40,20 @@ PanelKomplekt/                         корень репозитория
     ├── Core/                          общий код для всех команд
     │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка)
     │   ├── CommandCatalog.cs          список всех команд — источник кнопок ленты
-    │   └── CommandRunner.cs           запуск тела команды с обработкой ошибок
+    │   ├── CommandRunner.cs           запуск тела команды с обработкой ошибок
+    │   └── IconLoader.cs              загрузка иконок кнопок из ресурсов DLL
     ├── Ribbon/                        лента
     │   ├── RibbonBuilder.cs           построение вкладки по CommandCatalog
     │   └── RibbonCommandHandler.cs    запуск команды AutoCAD по нажатию кнопки
     └── Commands/                      команды, каждая в своей папке
         ├── C100_About/                PK_C100_ABOUT — версия плагина
         │   ├── C100_About.cs
-        │   └── C100_About.md
+        │   ├── C100_About.md
+        │   └── C100_About_16.png / _32.png    иконки кнопки
         └── C101_ShowElementId/        PK_C101_SHOWELEMENTID — ID выбранного элемента
             ├── C101_ShowElementId.cs
-            └── C101_ShowElementId.md
+            ├── C101_ShowElementId.md
+            └── C101_ShowElementId_16.png / _32.png
 ```
 
 ## Установочный архив
@@ -81,7 +85,7 @@ flowchart TD
 
 1. AutoCAD загружает `PanelKomplekt.dll` (из `.bundle` или через NETLOAD при отладке) и вызывает `App.Initialize()`.
 2. `App` при первом простое вызывает `RibbonBuilder.Create()`; при смене рабочего пространства — повторно.
-3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям.
+3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`).
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).
 5. AutoCAD вызывает метод с `[CommandMethod]` → тело команды выполняется через `CommandRunner.Run`.
 

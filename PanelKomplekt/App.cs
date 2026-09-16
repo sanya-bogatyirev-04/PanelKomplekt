@@ -46,8 +46,13 @@ namespace PanelKomplekt
             // При смене рабочего пространства AutoCAD пересоздаёт ленту — добавляем вкладку заново.
             AcApp.SystemVariableChanged += OnSystemVariableChanged;
 
+            // Версия и путь к DLL: сразу видно, какая копия плагина загружена
+            // (установленная из .bundle или отладочная из bin\Debug).
+            var assembly = typeof(App).Assembly;
             var doc = AcApp.DocumentManager.MdiActiveDocument;
-            doc?.Editor.WriteMessage("\nPanelKomplekt загружен. Вкладка «PanelKomplekt» на ленте.\n");
+            doc?.Editor.WriteMessage(
+                $"\nPanelKomplekt {assembly.GetName().Version} загружен из {assembly.Location}\n" +
+                "Вкладка «PanelKomplekt» на ленте.\n");
         }
 
         /// <summary>

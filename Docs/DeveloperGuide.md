@@ -52,8 +52,17 @@ dotnet build PanelKomplekt.sln -c Debug
 
 Номера команд: `C100` — служебные и тестовые, `C200` — раскладка, `C300` — спецификации.
 
+### Иконки кнопки
+- Файлы `<Key>_16.png` и `<Key>_32.png` в папке команды (Key — имя папки, например `C101_ShowElementId`). Прозрачный фон; 32 px — большая кнопка, 16 px — маленькая.
+- Иконки встраиваются в DLL автоматически (правило `EmbeddedResource` в `PanelKomplekt.csproj`), загружает их `Core/IconLoader.cs`. Нет иконки — кнопка показывается только с текстом.
+- Существующие иконки рисует `tools\Generate-Icons.ps1`: чтобы изменить цвета или добавить иконку новой команды, поправьте скрипт и запустите
+  ```
+  powershell -ExecutionPolicy Bypass -File tools\Generate-Icons.ps1 -PreviewPath %TEMP%\icons.png
+  ```
+  Параметр `-PreviewPath` создаёт картинку предпросмотра на светлом и тёмном фоне ленты.
+
 ## 6. Выпуск версии для заказчика
-1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` (например, `0.2.0`), допишите `CHANGELOG.md`.
+1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` по схеме `A.B.C` из [DevelopmentRules.md](DevelopmentRules.md), раздел 9 (A — глобальное обновление, B — изменения, заметные пользователю, C — служебные), допишите `CHANGELOG.md`.
 2. Соберите архив локально:
    ```
    powershell -ExecutionPolicy Bypass -File tools\Build-Bundle.ps1
@@ -80,3 +89,4 @@ dotnet build PanelKomplekt.sln -c Debug
 | Нет кнопки на ленте | Команда не добавлена в `Core/CommandCatalog.cs`. |
 | AutoCAD не загружает DLL при F5 | Папка `bin\Debug` не добавлена в надёжные расположения. |
 | Сборка падает: файл занят | Закройте AutoCAD — он держит загруженную DLL. |
+| При F5 изменения не видны (например, нет новых иконок) | На компьютере установлен плагин из архива (`C:\Program Files\Autodesk\ApplicationPlugins\PanelKomplekt.bundle`): AutoCAD загружает его при запуске, и отладочная DLL с тем же именем уже не загружается. Удалите установленную версию (`Uninstall.cmd`). Проверка: в командной строке при запуске строка «PanelKomplekt … загружен из <путь>» должна указывать на `bin\Debug`. |

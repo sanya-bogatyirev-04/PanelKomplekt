@@ -1,4 +1,6 @@
-﻿using Autodesk.AutoCAD.Runtime;
+using System.Text;
+using System.Windows.Forms;
+using Autodesk.AutoCAD.Runtime;
 using PanelKomplekt.Core;
 
 // Регистрация класса команд: при наличии ExtensionApplication AutoCAD ищет команды только в перечисленных классах.
@@ -7,7 +9,8 @@ using PanelKomplekt.Core;
 namespace PanelKomplekt.Commands
 {
     /// <summary>
-    /// C100. Служебная команда: выводит название и версию плагина.
+    /// C100. Служебная команда: окно со сведениями о плагине —
+    /// версия, заказчик, разработчик и применяемые технологии.
     /// Документация: C100_About.md в папке команды.
     /// </summary>
     public class C100_About
@@ -23,20 +26,47 @@ namespace PanelKomplekt.Commands
             GlobalName = GlobalName,
             RibbonText = "О плагине",
             RibbonPanel = "Сервис",
-            Description = "Название и версия плагина"
+            Description = "Сведения о плагине: версия, заказчик, разработчик, технологии"
         };
 
         /// <summary>
-        /// Точка входа команды: вывод версии плагина в командную строку.
+        /// Точка входа команды: всплывающее окно со сведениями о плагине.
         /// </summary>
         [CommandMethod(GlobalName)]
         public void Execute()
         {
             CommandRunner.Run(Info, doc =>
             {
-                var version = typeof(C100_About).Assembly.GetName().Version;
-                doc.Editor.WriteMessage($"\nPanelKomplekt {version} — раскладка сэндвич-панелей и спецификация.\n");
+                // Версия дублируется в командную строку: её удобно скопировать в сообщение об ошибке.
+                doc.Editor.WriteMessage($"\n{PluginInfo.Name} {PluginInfo.Version}\n");
+
+                MessageBox.Show(
+                    AcadWindow.Main,
+                    BuildText(),
+                    $"О плагине {PluginInfo.Name}",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
             });
+        }
+
+        /// <summary>
+        /// Текст окна «О плагине».
+        /// </summary>
+        private static string BuildText()
+        {
+            var text = new StringBuilder();
+            text.AppendLine($"{PluginInfo.Name}, версия {PluginInfo.Version}");
+            text.AppendLine(PluginInfo.Purpose);
+            text.AppendLine();
+            text.AppendLine($"Создан для: {PluginInfo.Customer}");
+            text.AppendLine($"Разработчик: {PluginInfo.Author}");
+            text.AppendLine();
+            text.AppendLine("Технологии:");
+            foreach (var technology in PluginInfo.Technologies)
+            {
+                text.AppendLine($"  • {technology}");
+            }
+            return text.ToString().TrimEnd();
         }
     }
 }

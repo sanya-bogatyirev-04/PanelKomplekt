@@ -38,6 +38,10 @@ namespace PanelKomplekt.Ribbon
                     {
                         Text = command.RibbonText,
                         ShowText = true,
+                        // Иконки из папки команды; если их нет — кнопка остаётся текстовой.
+                        Image = IconLoader.Load(command.Key, 16),
+                        LargeImage = IconLoader.Load(command.Key, 32),
+                        ShowImage = true,
                         Size = RibbonItemSize.Large,
                         Orientation = System.Windows.Controls.Orientation.Vertical,
                         ToolTip = $"{command.Description}\nКоманда: {command.GlobalName}",

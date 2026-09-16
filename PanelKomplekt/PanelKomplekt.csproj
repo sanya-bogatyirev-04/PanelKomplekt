@@ -51,4 +51,9 @@
     <None Update="start.scr" CopyToOutputDirectory="Never" />
   </ItemGroup>
 
+  <!-- Иконки кнопок ленты: лежат в папках команд, встраиваются в DLL как Icons/<Key>_<размер>.png -->
+  <ItemGroup>
+    <EmbeddedResource Include="Commands\**\*.png" LogicalName="Icons/%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>

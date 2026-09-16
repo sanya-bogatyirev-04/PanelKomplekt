@@ -7,6 +7,12 @@ namespace PanelKomplekt.Core
     /// </summary>
     public sealed class CommandInfo
     {
+        /// <summary>
+        /// Ключ команды — имя её папки и файлов, например "C101_ShowElementId".
+        /// По нему ищутся иконки кнопки: &lt;Key&gt;_16.png и &lt;Key&gt;_32.png.
+        /// </summary>
+        public string Key { get; set; }
+
         /// <summary>Номер команды, например "C101".</summary>
         public string Number { get; set; }
 

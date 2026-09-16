@@ -11,43 +11,13 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Версия A.B.C: A — глобальное обновление, B — изменения для пользователя, C — служебные (Docs/DevelopmentRules.md, п. 9) -->
-    <Version>0.3.0</Version>
-    <!-- Папка установки AutoCAD 2021: при другом пути поправить здесь -->
-    <AcadDir>C:\Program Files\Autodesk\AutoCAD 2021</AcadDir>
+    <Version>0.3.1</Version>
   </PropertyGroup>
 
-  <!-- Отладка: VS запускает AutoCAD 2021 и скриптом start.scr загружает собранную DLL -->
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <StartAction>Program</StartAction>
-    <StartProgram>$(AcadDir)\acad.exe</StartProgram>
-    <StartArguments>/nologo /b "$(MSBuildProjectDirectory)\start.scr"</StartArguments>
-  </PropertyGroup>
+  <!-- Библиотеки AutoCAD 2021 (локально или из NuGet) -->
+  <Import Project="..\AutoCadReferences.props" />
 
-  <!-- Библиотеки AutoCAD из установленного AutoCAD 2021 (локальная разработка) -->
-  <ItemGroup Condition="Exists('$(AcadDir)\acmgd.dll')">
-    <Reference Include="AcCoreMgd">
-      <HintPath>$(AcadDir)\accoremgd.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AcDbMgd">
-      <HintPath>$(AcadDir)\acdbmgd.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AcMgd">
-      <HintPath>$(AcadDir)\acmgd.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AdWindows">
-      <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <!-- AutoCAD не установлен (например, сборка на GitHub): те же библиотеки из NuGet, в папку сборки не копируются -->
-  <ItemGroup Condition="!Exists('$(AcadDir)\acmgd.dll')">
-    <PackageReference Include="AutoCAD.NET" Version="24.0.0" ExcludeAssets="runtime" />
-  </ItemGroup>
-
+  <!-- Отладка (F5) настроена в Properties/launchSettings.json: запуск AutoCAD 2021 + start.scr -->
   <ItemGroup>
     <None Update="start.scr" CopyToOutputDirectory="Never" />
   </ItemGroup>

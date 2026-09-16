@@ -17,7 +17,7 @@ git clone https://github.com/sanya-bogatyirev-04/PanelKomplekt.git
 ```
 Откройте `PanelKomplekt.sln` в Visual Studio 2022.
 
-Путь к AutoCAD задан в `PanelKomplekt/PanelKomplekt.csproj` в свойстве `AcadDir`
+Путь к AutoCAD задан в `AutoCadReferences.props` (общий для всех проектов) в свойстве `AcadDir`
 (по умолчанию `C:\Program Files\Autodesk\AutoCAD 2021`). Если AutoCAD установлен в другое место — поменяйте его там.
 Если библиотек AutoCAD по этому пути нет (например, на сервере GitHub), проект автоматически берёт их из NuGet-пакета `AutoCAD.NET 24.0.0`.
 
@@ -34,6 +34,12 @@ git clone https://github.com/sanya-bogatyirev-04/PanelKomplekt.git
 2. F5: Visual Studio соберёт проект, запустит AutoCAD, а `start.scr` загрузит DLL командой NETLOAD.
 3. На ленте появится вкладка «PanelKomplekt»; точки останова в коде срабатывают.
 4. Загруженную DLL нельзя выгрузить: после изменения кода закройте AutoCAD и снова нажмите F5.
+
+**Установленная версия не мешает отладке.** Если на компьютере стоит плагин из архива, удалять его не нужно:
+при F5 Visual Studio передаёт AutoCAD переменную окружения `PANELKOMPLEKT_DEV=1` (`Properties/launchSettings.json`),
+и загрузчик установленной версии (`PanelKomplekt.Loader`) её пропускает. В командной строке при запуске будет строка
+«режим отладки — установленная версия не загружается», а строка «PanelKomplekt … загружен из …» укажет на `bin\Debug`.
+При обычном запуске AutoCAD (не из Visual Studio) работает установленная версия.
 
 Сборка без Visual Studio:
 ```
@@ -89,4 +95,4 @@ dotnet build PanelKomplekt.sln -c Debug
 | Нет кнопки на ленте | Команда не добавлена в `Core/CommandCatalog.cs`. |
 | AutoCAD не загружает DLL при F5 | Папка `bin\Debug` не добавлена в надёжные расположения. |
 | Сборка падает: файл занят | Закройте AutoCAD — он держит загруженную DLL. |
-| При F5 изменения не видны (например, нет новых иконок) | На компьютере установлен плагин из архива (`C:\Program Files\Autodesk\ApplicationPlugins\PanelKomplekt.bundle`): AutoCAD загружает его при запуске, и отладочная DLL с тем же именем уже не загружается. Удалите установленную версию (`Uninstall.cmd`). Проверка: в командной строке при запуске строка «PanelKomplekt … загружен из <путь>» должна указывать на `bin\Debug`. |
+| При F5 изменения не видны, строка «PanelKomplekt … загружен из» указывает на Program Files | Установлена старая версия плагина без загрузчика (до 0.3.1): один раз переустановите плагин из свежего архива (`Build-Bundle.ps1` → `Install.cmd`). Или AutoCAD запущен не через F5 (профиль «AutoCAD 2021»), и переменная `PANELKOMPLEKT_DEV` не передана. |

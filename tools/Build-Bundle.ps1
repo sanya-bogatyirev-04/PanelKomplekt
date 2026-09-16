@@ -4,7 +4,7 @@
 
 .DESCRIPTION
     1. Собирает решение в конфигурации Release.
-    2. Складывает в dist\PanelKomplekt папку PanelKomplekt.bundle (PackageContents.xml + DLL),
+    2. Складывает в dist\PanelKomplekt папку PanelKomplekt.bundle (PackageContents.xml + загрузчик + плагин),
        установщик Install.cmd / Uninstall.cmd / Install.ps1 и инструкцию ReadMe.txt.
     3. Упаковывает всё в dist\PanelKomplekt-<версия>.zip — этот архив отправляется заказчику.
     Версия берётся из <Version> в PanelKomplekt\PanelKomplekt.csproj.
@@ -31,8 +31,12 @@ Write-Host "Версия плагина: $Version"
 dotnet build (Join-Path $Root 'PanelKomplekt.sln') -c Release
 if ($LASTEXITCODE -ne 0) { throw 'Сборка завершилась с ошибкой.' }
 
-$Dll = Join-Path $Root 'PanelKomplekt\bin\Release\PanelKomplekt.dll'
-if (-not (Test-Path $Dll)) { throw "Не найдена собранная DLL: $Dll" }
+# Основной плагин и загрузчик (AutoCAD загружает загрузчик, а он — плагин).
+$Dlls = @(
+    (Join-Path $Root 'PanelKomplekt\bin\Release\PanelKomplekt.dll'),
+    (Join-Path $Root 'PanelKomplekt.Loader\bin\Release\PanelKomplekt.Loader.dll')
+)
+foreach ($dll in $Dlls) { if (-not (Test-Path $dll)) { throw "Не найдена собранная DLL: $dll" } }
 
 # 2. Сборка папки пакета с нуля.
 if (Test-Path $Dist) { Remove-Item $Dist -Recurse -Force }
@@ -41,7 +45,7 @@ New-Item -ItemType Directory -Force (Join-Path $Bundle 'Contents') | Out-Null
 $manifest = (Get-Content (Join-Path $Installer 'PackageContents.xml') -Raw -Encoding UTF8).Replace('{{Version}}', $Version)
 [IO.File]::WriteAllText((Join-Path $Bundle 'PackageContents.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))
 
-Copy-Item $Dll (Join-Path $Bundle 'Contents')
+Copy-Item $Dlls (Join-Path $Bundle 'Contents')
 foreach ($file in 'Install.cmd', 'Uninstall.cmd', 'Install.ps1', 'ReadMe.txt') {
     Copy-Item (Join-Path $Installer $file) $Package
 }

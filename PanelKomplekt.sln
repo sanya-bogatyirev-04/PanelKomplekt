@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanelKomplekt", "PanelKomplekt\PanelKomplekt.csproj", "{51F12A77-B6FE-4713-BA95-16CEFBC2CF1C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PanelKomplekt.Loader", "PanelKomplekt.Loader\PanelKomplekt.Loader.csproj", "{CE281CAD-053E-457E-81B1-62405E585B37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,18 @@ Global
 		{51F12A77-B6FE-4713-BA95-16CEFBC2CF1C}.Release|x64.Build.0 = Release|Any CPU
 		{51F12A77-B6FE-4713-BA95-16CEFBC2CF1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{51F12A77-B6FE-4713-BA95-16CEFBC2CF1C}.Release|x86.Build.0 = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|x64.Build.0 = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Debug|x86.Build.0 = Debug|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|x64.Build.0 = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|x86.ActiveCfg = Release|Any CPU
+		{CE281CAD-053E-457E-81B1-62405E585B37}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

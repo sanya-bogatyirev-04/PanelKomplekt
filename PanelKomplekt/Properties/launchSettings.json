@@ -3,7 +3,10 @@
     "AutoCAD 2021": {
       "commandName": "Executable",
       "executablePath": "C:\\Program Files\\Autodesk\\AutoCAD 2021\\acad.exe",
-      "commandLineArgs": "/nologo /b \"$(MSBuildProjectDirectory)\\start.scr\""
+      "commandLineArgs": "/nologo /b \"$(MSBuildProjectDirectory)\\start.scr\"",
+      "environmentVariables": {
+        "PANELKOMPLEKT_DEV": "1"
+      }
     }
   }
 }

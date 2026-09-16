@@ -62,7 +62,7 @@ dotnet build PanelKomplekt.sln -c Debug
   Параметр `-PreviewPath` создаёт картинку предпросмотра на светлом и тёмном фоне ленты.
 
 ## 6. Выпуск версии для заказчика
-1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` (например, `0.2.0`), допишите `CHANGELOG.md`.
+1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` по схеме `A.B.C` из [DevelopmentRules.md](DevelopmentRules.md), раздел 9 (A — глобальное обновление, B — изменения, заметные пользователю, C — служебные), допишите `CHANGELOG.md`.
 2. Соберите архив локально:
    ```
    powershell -ExecutionPolicy Bypass -File tools\Build-Bundle.ps1

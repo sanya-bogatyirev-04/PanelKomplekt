@@ -10,7 +10,8 @@
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <Version>0.1.0</Version>
+    <!-- Версия A.B.C: A — глобальное обновление, B — изменения для пользователя, C — служебные (Docs/DevelopmentRules.md, п. 9) -->
+    <Version>0.2.0</Version>
     <!-- Папка установки AutoCAD 2021: при другом пути поправить здесь -->
     <AcadDir>C:\Program Files\Autodesk\AutoCAD 2021</AcadDir>
   </PropertyGroup>

@@ -6,6 +6,7 @@
 ```
 PanelKomplekt/                         корень репозитория
 ├── PanelKomplekt.sln                  решение VS 2022
+├── AutoCadReferences.props            общие ссылки на библиотеки AutoCAD 2021 (локально или NuGet)
 ├── README.md                          главная страница: для пользователя и для программиста
 ├── CHANGELOG.md                       журнал изменений простым языком
 ├── LICENSE                            закрытый проект, все права защищены
@@ -31,10 +32,13 @@ PanelKomplekt/                         корень репозитория
 │   ├── Build-Bundle.ps1               сборка установочного архива в dist/
 │   ├── dump.lsp                       выгрузка содержимого DWG в текст
 │   └── dump.scr                       скрипт запуска dump.lsp
+├── PanelKomplekt.Loader/              загрузчик установленной версии
+│   ├── PanelKomplekt.Loader.csproj
+│   └── LoaderApp.cs                   грузит PanelKomplekt.dll; при PANELKOMPLEKT_DEV=1 (отладка) — ничего
 └── PanelKomplekt/                     проект плагина
-    ├── PanelKomplekt.csproj           версия, ссылки на AutoCAD (локально или из NuGet)
+    ├── PanelKomplekt.csproj           версия плагина, подключение AutoCadReferences.props
     ├── start.scr                      NETLOAD собранной DLL при отладке
-    ├── Properties/launchSettings.json запуск AutoCAD 2021 по F5
+    ├── Properties/launchSettings.json запуск AutoCAD 2021 по F5 с PANELKOMPLEKT_DEV=1
     ├── App.cs                         точка входа (IExtensionApplication), создание ленты
     ├── Core/                          общий код для всех команд
     │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка)
@@ -58,7 +62,9 @@ PanelKomplekt/                         корень репозитория
 PanelKomplekt-<версия>.zip
 ├── PanelKomplekt.bundle/
 │   ├── PackageContents.xml
-│   └── Contents/PanelKomplekt.dll
+│   └── Contents/
+│       ├── PanelKomplekt.Loader.dll   загружается AutoCAD при запуске
+│       └── PanelKomplekt.dll          основной плагин, загружается загрузчиком
 ├── Install.cmd
 ├── Uninstall.cmd
 ├── Install.ps1
@@ -69,7 +75,10 @@ PanelKomplekt-<версия>.zip
 ## Как работает плагин
 ```mermaid
 flowchart TD
-    A[Запуск AutoCAD] --> B["Автозагрузчик читает PackageContents.xml<br/>и загружает PanelKomplekt.dll"]
+    A[Запуск AutoCAD] --> L["Автозагрузчик читает PackageContents.xml<br/>и загружает PanelKomplekt.Loader.dll"]
+    L -->|обычный запуск| B["LoaderApp: ExtensionLoader.Load<br/>(PanelKomplekt.dll)"]
+    L -->|"F5 из VS (PANELKOMPLEKT_DEV=1)"| S["Установленная версия пропущена;<br/>start.scr загружает bin\Debug\PanelKomplekt.dll"]
+    S --> C
     B --> C["App.Initialize()"]
     C --> D["Первый простой AutoCAD:<br/>RibbonBuilder.Create()"]
     D --> E["CommandCatalog — список команд"]
@@ -79,7 +88,7 @@ flowchart TD
     H --> I["CommandRunner.Run:<br/>тело команды + перехват ошибок"]
 ```
 
-1. AutoCAD загружает `PanelKomplekt.dll` (из `.bundle` или через NETLOAD при отладке) и вызывает `App.Initialize()`.
+1. Установленная версия: AutoCAD загружает `PanelKomplekt.Loader.dll`, он загружает `PanelKomplekt.dll`. Отладка (F5): загрузчик пропускает установленную версию, `start.scr` загружает DLL из `bin\Debug`. В обоих случаях вызывается `App.Initialize()`.
 2. `App` при первом простое вызывает `RibbonBuilder.Create()`; при смене рабочего пространства — повторно.
 3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям.
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).

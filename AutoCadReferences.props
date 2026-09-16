@@ -1,0 +1,36 @@
+<Project>
+  <!--
+    Общие ссылки на библиотеки AutoCAD 2021 для всех проектов решения.
+    Подключается в .csproj строкой <Import Project="..\AutoCadReferences.props" />.
+  -->
+
+  <PropertyGroup>
+    <!-- Папка установки AutoCAD 2021: при другом пути поправить здесь -->
+    <AcadDir Condition="'$(AcadDir)' == ''">C:\Program Files\Autodesk\AutoCAD 2021</AcadDir>
+  </PropertyGroup>
+
+  <!-- Библиотеки из установленного AutoCAD 2021 (локальная разработка); в папку сборки не копируются -->
+  <ItemGroup Condition="Exists('$(AcadDir)\acmgd.dll')">
+    <Reference Include="AcCoreMgd">
+      <HintPath>$(AcadDir)\accoremgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcDbMgd">
+      <HintPath>$(AcadDir)\acdbmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AcMgd">
+      <HintPath>$(AcadDir)\acmgd.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>$(AcadDir)\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- AutoCAD не установлен (например, сборка на GitHub): те же библиотеки из NuGet, в папку сборки не копируются -->
+  <ItemGroup Condition="!Exists('$(AcadDir)\acmgd.dll')">
+    <PackageReference Include="AutoCAD.NET" Version="24.0.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+</Project>

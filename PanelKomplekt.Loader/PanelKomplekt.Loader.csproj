@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Загрузчик плагина для установленной версии (.bundle).
+    AutoCAD при запуске загружает этот маленький DLL, а он — основной PanelKomplekt.dll.
+    При отладке из Visual Studio (переменная окружения PANELKOMPLEKT_DEV=1) установленная версия не загружается,
+    чтобы работала свежая сборка из bin\Debug.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>PanelKomplekt.Loader</RootNamespace>
+    <AssemblyName>PanelKomplekt.Loader</AssemblyName>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <!-- Библиотеки AutoCAD 2021 (локально или из NuGet) -->
+  <Import Project="..\AutoCadReferences.props" />
+
+</Project>

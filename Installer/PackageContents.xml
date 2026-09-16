@@ -21,11 +21,15 @@
 
   <Components Description="PanelKomplekt">
     <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R24.0" SeriesMax="R24.3" />
-    <!-- Загрузка при запуске AutoCAD: нужна, чтобы сразу появилась вкладка на ленте -->
+    <!--
+      Загрузка при запуске AutoCAD: нужна, чтобы сразу появилась вкладка на ленте.
+      Загружается загрузчик, а он — PanelKomplekt.dll из той же папки
+      (при запуске из Visual Studio с PANELKOMPLEKT_DEV=1 загрузчик ничего не грузит).
+    -->
     <ComponentEntry
       AppName="PanelKomplekt"
       Version="{{Version}}"
-      ModuleName="./Contents/PanelKomplekt.dll"
+      ModuleName="./Contents/PanelKomplekt.Loader.dll"
       AppDescription="Раскладка сэндвич-панелей по фасадам и спецификация"
       LoadOnAutoCADStartup="True" />
   </Components>

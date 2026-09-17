@@ -129,10 +129,21 @@ if ($closeIndex -lt 0) { throw "В $Catalog не найден конец спи�
 $lines.Insert($closeIndex, "            $FullName.Info,")
 [IO.File]::WriteAllLines($Catalog, $lines, $Utf8Bom)
 
-# 4. Строка в таблице команд (таблица — последний блок файла).
+# 4. Строка в таблице команд: сразу после последней строки таблицы в разделе «## Команды»
+#    (после таблицы в файле могут идти другие разделы, поэтому дописывать в конец файла нельзя).
 $row = "| $Number | $GlobalName | $Panel | $Title | в разработке |"
-$structureText = [IO.File]::ReadAllText($Structure, $Utf8NoBom).TrimEnd() + "`r`n" + $row + "`r`n"
-[IO.File]::WriteAllText($Structure, $structureText, $Utf8NoBom)
+$structureLines = [Collections.Generic.List[string]]([IO.File]::ReadAllLines($Structure, $Utf8NoBom))
+$sectionIndex = -1
+for ($i = 0; $i -lt $structureLines.Count; $i++) { if ($structureLines[$i].Trim() -eq '## Команды') { $sectionIndex = $i; break } }
+if ($sectionIndex -lt 0) { throw "В $Structure не найден раздел «## Команды»." }
+$insertIndex = -1
+for ($i = $sectionIndex + 1; $i -lt $structureLines.Count; $i++) {
+    if ($structureLines[$i].StartsWith('|')) { $insertIndex = $i + 1 }
+    elseif ($insertIndex -ge 0) { break }
+}
+if ($insertIndex -lt 0) { throw "В разделе «## Команды» файла $Structure не найдена таблица." }
+$structureLines.Insert($insertIndex, $row)
+[IO.File]::WriteAllLines($Structure, $structureLines, $Utf8NoBom)
 
 Write-Host "Создана команда $FullName ($GlobalName)" -ForegroundColor Green
 Write-Host "  $CommandDir"

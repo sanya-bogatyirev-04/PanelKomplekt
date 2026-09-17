@@ -47,6 +47,13 @@ $manifest = (Get-Content (Join-Path $Installer 'PackageContents.xml') -Raw -Enco
 
 Copy-Item $Dlls (Join-Path $Bundle 'Contents')
 
+# Библиотеки, от которых зависит плагин (ClosedXML и его зависимости для выгрузки в Excel):
+# все DLL из папки сборки плагина, кроме самого плагина (он уже скопирован).
+$Dependencies = Get-ChildItem (Join-Path $Root 'PanelKomplekt\bin\Release') -Filter '*.dll' | Where-Object { $_.Name -ne 'PanelKomplekt.dll' }
+foreach ($dependency in $Dependencies) {
+    Copy-Item $dependency.FullName (Join-Path $Bundle 'Contents')
+}
+
 # Файл-шаблон блока панели: плагин ищет его в Contents\Blocks рядом с PanelKomplekt.dll.
 $BlocksSource = Join-Path $Root 'PanelKomplekt\bin\Release\Blocks'
 if (-not (Test-Path (Join-Path $BlocksSource 'PK_Panel.dwg'))) { throw "Не найден файл блока: $BlocksSource\PK_Panel.dwg" }

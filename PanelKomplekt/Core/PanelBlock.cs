@@ -44,6 +44,49 @@ namespace PanelKomplekt.Core
         /// <summary>Максимальная длина панели, мм (ограничение заказчика).</summary>
         public const double MaxLength = 13600;
 
+        /// <summary>Минимальная длина панели, мм (как у параметра Length в блоке).</summary>
+        public const double MinLength = 10;
+
+        /// <summary>Минимальная ширина панели, мм (как у параметра Width в блоке).</summary>
+        public const double MinWidth = 100;
+
+        /// <summary>Максимальная ширина панели, мм (как у параметра Width в блоке).</summary>
+        public const double MaxWidth = 2000;
+
+        /// <summary>Ширина панели по умолчанию, мм (как в файле-шаблоне).</summary>
+        public const double DefaultWidth = 1190;
+
+        /// <summary>Шаг изменения длины и ширины, мм (приращение параметров в блоке).</summary>
+        public const double SizeStep = 10;
+
+        /// <summary>
+        /// Ссылка «сам блок» в коде поля атрибута. Команда ВСТАВИТЬ заменяет её на ID вставки;
+        /// при вставке из кода это делает <see cref="PanelInserter"/>.
+        /// </summary>
+        public const string BlockReferencePlaceholder = "?BlockRefId";
+
+        /// <summary>Имя свойства текста, к которому привязано поле атрибута.</summary>
+        public const string TextFieldProperty = "TEXT";
+
+        /// <summary>
+        /// Длина панели по правилам блока: кратно 10 мм, в пределах 10…13600 мм.
+        /// </summary>
+        public static double NormalizeLength(double length) => Normalize(length, MinLength, MaxLength);
+
+        /// <summary>
+        /// Ширина панели по правилам блока: кратно 10 мм, в пределах 100…2000 мм.
+        /// </summary>
+        public static double NormalizeWidth(double width) => Normalize(width, MinWidth, MaxWidth);
+
+        /// <summary>
+        /// Округление до шага <see cref="SizeStep"/> и ограничение диапазоном.
+        /// </summary>
+        private static double Normalize(double value, double min, double max)
+        {
+            var rounded = Math.Round(value / SizeStep, MidpointRounding.AwayFromZero) * SizeStep;
+            return Math.Max(min, Math.Min(max, rounded));
+        }
+
         /// <summary>Имя файла-шаблона с определением блока.</summary>
         private const string TemplateFileName = "PK_Panel.dwg";
 

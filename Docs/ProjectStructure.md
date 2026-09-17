@@ -51,7 +51,11 @@ PanelKomplekt/                         корень репозитория
     │   ├── AcadWindow.cs              главное окно AutoCAD как владелец диалогов (MessageBox, формы)
     │   ├── PanelBlock.cs              блок PK_Panel: имена параметров и атрибутов, добавление в чертёж из шаблона
     │   ├── PanelData.cs               данные одной панели (длина, ширина, марка, тип, цвета, площадь)
-    │   └── PanelReader.cs             распознавание и чтение панелей из чертежа
+    │   ├── PanelReader.cs             распознавание и чтение панелей из чертежа
+    │   ├── PanelSettings.cs           настройки новых панелей (ширина, буква, тип, цвета), хранятся в чертеже
+    │   ├── PanelInserter.cs           вставка панели из кода: атрибуты, поле длины (?BlockRefId → ID вставки), размеры
+    │   ├── PanelFieldRefresher.cs     пересчёт полей в атрибутах одной панели
+    │   └── PanelFieldUpdater.cs       фоновое обновление марок после команд (растягивание, копирование, отмена)
     ├── Ribbon/                        лента
     │   ├── RibbonBuilder.cs           построение вкладки по CommandCatalog
     │   └── RibbonCommandHandler.cs    запуск команды AutoCAD по нажатию кнопки
@@ -64,10 +68,23 @@ PanelKomplekt/                         корень репозитория
         │   ├── C101_ShowElementId.cs
         │   ├── C101_ShowElementId.md
         │   └── C101_ShowElementId_16.png / _32.png
-        └── C102_PanelCheck/           PK_C102_PANELCHECK — проверка панелей PK_Panel
-            ├── C102_PanelCheck.cs
-            ├── C102_PanelCheck.md
-            └── C102_PanelCheck_16.png / _32.png
+        ├── C102_PanelCheck/           PK_C102_PANELCHECK — проверка панелей PK_Panel
+        │   ├── C102_PanelCheck.cs
+        │   ├── C102_PanelCheck.md
+        │   └── C102_PanelCheck_16.png / _32.png
+        ├── C201_InsertPanel/          PK_C201_INSERTPANEL — вставка панели
+        │   ├── C201_InsertPanel.cs    команда: точки, опции, вставка
+        │   ├── PanelJig.cs            предпросмотр панели при указании конечной точки
+        │   ├── C201_InsertPanel.md
+        │   └── C201_InsertPanel_16.png / _32.png
+        └── C301_Specification/        PK_C301_SPECIFICATION — спецификация панелей
+            ├── C301_Specification.cs          команда: выбор панелей, вид результата
+            ├── SpecificationModel.cs          модель: группы, строки, итоги, предупреждения
+            ├── SpecificationBuilder.cs        расчёт без AutoCAD: группировка, площади, предупреждения
+            ├── SpecificationExcelWriter.cs    запись .xlsx (ClosedXML)
+            ├── SpecificationTableWriter.cs    таблица AutoCAD в чертеже
+            ├── C301_Specification.md
+            └── C301_Specification_16.png / _32.png
 ```
 
 ## Установочный архив
@@ -79,6 +96,7 @@ PanelKomplekt-<версия>.zip
 │   └── Contents/
 │       ├── PanelKomplekt.Loader.dll   загружается AutoCAD при запуске
 │       ├── PanelKomplekt.dll          основной плагин, загружается загрузчиком
+│       ├── ClosedXML.dll, DocumentFormat.OpenXml.dll, ExcelNumberFormat.dll, System.IO.Packaging.dll   выгрузка в Excel
 │       └── Blocks/PK_Panel.dwg        файл-шаблон блока панели
 ├── Install.cmd
 ├── Uninstall.cmd
@@ -104,7 +122,7 @@ flowchart TD
 ```
 
 1. Установленная версия: AutoCAD загружает `PanelKomplekt.Loader.dll`, он загружает `PanelKomplekt.dll`. Отладка (F5): загрузчик пропускает установленную версию, `start.scr` загружает DLL из `bin\Debug`. В обоих случаях вызывается `App.Initialize()`.
-2. `App` при первом простое вызывает `RibbonBuilder.Create()`; при смене рабочего пространства — повторно.
+2. `App` при первом простое вызывает `RibbonBuilder.Create()` (при смене рабочего пространства — повторно) и запускает `PanelFieldUpdater` — фоновое обновление марок панелей во всех чертежах.
 3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`).
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).
 5. AutoCAD вызывает метод с `[CommandMethod]` → тело команды выполняется через `CommandRunner.Run`.
@@ -115,6 +133,8 @@ flowchart TD
 | C100 | PK_C100_ABOUT | Сервис | Окно «О плагине»: версия, заказчик, разработчик, технологии | служебная |
 | C101 | PK_C101_SHOWELEMENTID | Сервис | ID выбранного элемента | тестовая |
 | C102 | PK_C102_PANELCHECK | Сервис | Проверка панелей: блок PK_Panel в чертеже и данные выбранных панелей | служебная |
+| C201 | PK_C201_INSERTPANEL | Панели | Вставка панели двумя точками; фоновое обновление марок | рабочая |
+| C301 | PK_C301_SPECIFICATION | Спецификации | Спецификация панелей: Excel и/или таблица в чертеже | рабочая |
 
 ## Блок PK_Panel
 Динамический блок сэндвич-панели, файл-шаблон `PanelKomplekt/Blocks/PK_Panel.dwg`. Работа с ним в коде — только через `Core/PanelBlock.cs` и `Core/PanelReader.cs`.

@@ -108,10 +108,54 @@ function Draw-PanelCheck([int]$Size) {
     $g.Dispose(); return $c.Bitmap
 }
 
+# C201 «Панель»: вытянутый прямоугольник панели с буквой П внутри.
+function Draw-InsertPanel([int]$Size) {
+    $c = New-Canvas $Size; $g = $c.Graphics
+    $textBrush = New-Object Drawing.SolidBrush($Orange)
+    $format = New-Object Drawing.StringFormat
+    $format.Alignment = [Drawing.StringAlignment]::Center
+    $format.LineAlignment = [Drawing.StringAlignment]::Center
+    $family = New-Object Drawing.FontFamily('Segoe UI')
+    $path = New-Object Drawing.Drawing2D.GraphicsPath
+    if ($Size -eq 32) {
+        $g.DrawRectangle((New-Pen $Blue 2.5), 1.75, 7.75, 28.5, 16.5)
+        $path.AddString('П', $family, [int][Drawing.FontStyle]::Bold, 15.0, (New-Object Drawing.RectangleF(0.0, 7.5, 32.0, 17.0)), $format)
+    }
+    else {
+        $g.DrawRectangle((New-Pen $Blue 1.3), 0.9, 3.9, 14.2, 8.2)
+        $path.AddString('П', $family, [int][Drawing.FontStyle]::Bold, 8.0, (New-Object Drawing.RectangleF(0.0, 3.5, 16.0, 9.0)), $format)
+    }
+    $g.FillPath($textBrush, $path)
+    $g.Dispose(); return $c.Bitmap
+}
+
+# C301 «Спецификация»: таблица (синяя сетка) с оранжевой строкой итога.
+function Draw-Specification([int]$Size) {
+    $c = New-Canvas $Size; $g = $c.Graphics
+    $total = New-Object Drawing.SolidBrush($Orange)
+    if ($Size -eq 32) {
+        $g.FillRectangle($total, 3.0, 21.0, 26.0, 6.0)                   # строка итога
+        $pen = New-Pen $Blue 2.0
+        $g.DrawRectangle($pen, 3.0, 4.0, 26.0, 23.0)                     # рамка
+        foreach ($y in 9.5, 15.0, 21.0) { $g.DrawLine($pen, 3.0, $y, 29.0, $y) }   # строки
+        $g.DrawLine($pen, 12.0, 4.0, 12.0, 21.0)                         # столбец марки
+    }
+    else {
+        $g.FillRectangle($total, 1.5, 10.5, 13.0, 3.5)
+        $pen = New-Pen $Blue 1.2
+        $g.DrawRectangle($pen, 1.5, 2.0, 13.0, 12.0)
+        foreach ($y in 5.0, 8.0, 10.5) { $g.DrawLine($pen, 1.5, $y, 14.5, $y) }
+        $g.DrawLine($pen, 6.0, 2.0, 6.0, 10.5)
+    }
+    $g.Dispose(); return $c.Bitmap
+}
+
 $icons = [ordered]@{
     'C100_About'         = ${function:Draw-About}
     'C101_ShowElementId' = ${function:Draw-ShowElementId}
     'C102_PanelCheck'    = ${function:Draw-PanelCheck}
+    'C201_InsertPanel'   = ${function:Draw-InsertPanel}
+    'C301_Specification' = ${function:Draw-Specification}
 }
 
 $generated = @()

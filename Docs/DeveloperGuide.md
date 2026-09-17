@@ -73,7 +73,20 @@ dotnet build PanelKomplekt.sln -c Debug
 - `Core/PanelReader` распознаёт панели (у растянутого блока имя берётся из `DynamicBlockTableRecord`) и читает длину и ширину из динамических параметров, остальное — из атрибутов.
 - Состав блока — таблица в [ProjectStructure.md](ProjectStructure.md), раздел «Блок PK_Panel». Имена параметров `Length`, `Width` и теги атрибутов менять нельзя: на них опирается код.
 - Изменение блока: открыть `PK_Panel.dwg` в AutoCAD → `БЛОКРЕД` → правки → сохранить как DWG 2018. Проверка без AutoCAD: ODA File Converter → текстовый DXF.
-- Поле `LENGTH_CM` пересчитывается AutoCAD только при `РЕГЕН`, сохранении и открытии; мгновенное обновление после растягивания делает плагин (этап 2 плана).
+- Поле `LENGTH_CM` пересчитывается AutoCAD только при `РЕГЕН`, сохранении и открытии. Мгновенное обновление делает `Core/PanelFieldUpdater.cs`:
+  во время команды запоминает изменённые вставки блоков (только ObjectId, без открытия объектов), после `CommandEnded`/`Cancelled`/`Failed`/`LispEnded`
+  пересчитывает поля панелей (`PanelFieldRefresher`). Запись в историю отмены на время пересчёта отключается (`Database.DisableUndoRecording`),
+  чтобы Ctrl+Z откатывал растягивание целиком; после отмены марка пересчитывается снова.
+- Вставка панели из кода — только через `Core/PanelInserter.cs`. Поле в определении атрибута ссылается на «сам блок» (`?BlockRefId`);
+  команда `ВСТАВИТЬ` подставляет ID вставки сама, а в коде это делает `PanelInserter` (иначе вместо числа будет `####`).
+  Порядок: вставка → атрибуты (`SetAttributeFromBlock`) и поле → динамические параметры → пересчёт поля.
+
+### Спецификация и Excel
+- Расчёт (`SpecificationBuilder`) не зависит от AutoCAD: на входе `PanelData`, на выходе модель `Specification`. Вывод — отдельно: `SpecificationExcelWriter` (.xlsx) и `SpecificationTableWriter` (таблица AutoCAD).
+- Excel пишется библиотекой **ClosedXML 0.95.4** (NuGet, MIT). Выбрана версия с отдельной сборкой под .NET Framework 4.6+: всего четыре DLL (`ClosedXML`, `DocumentFormat.OpenXml`, `ExcelNumberFormat`, `System.IO.Packaging`), без фасадов netstandard — меньше риск конфликтов с другими плагинами AutoCAD. `Build-Bundle.ps1` копирует в архив все DLL из `bin\Release`.
+- Код, использующий ClosedXML, собран в одном классе, поэтому библиотека загружается в AutoCAD только при первой выгрузке в Excel, а не при запуске плагина.
+- Марку, RAL и покрытия записывать через `SetValue(string)`: при присваивании `Value` ClosedXML превращает «3005» в число.
+- Проверка записи Excel без AutoCAD: небольшая консольная программа net48 со ссылками на `PanelKomplekt.dll` и ClosedXML, которая создаёт `Specification` вручную и вызывает `SpecificationExcelWriter.Save` (классы модели и записи не обращаются к библиотекам AutoCAD). Через PowerShell так проверить нельзя: он загружает все типы сборки, включая зависящие от AutoCAD.
 
 ## 6. Выпуск версии для заказчика
 1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` по схеме `A.B.C` из [DevelopmentRules.md](DevelopmentRules.md), раздел 9 (A — глобальное обновление, B — изменения, заметные пользователю, C — служебные), допишите `CHANGELOG.md`.

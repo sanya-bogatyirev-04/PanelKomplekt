@@ -30,6 +30,7 @@ namespace PanelKomplekt
         /// </summary>
         public void Terminate()
         {
+            PanelFieldUpdater.Stop();
         }
 
         /// <summary>
@@ -46,6 +47,9 @@ namespace PanelKomplekt
 
             // При смене рабочего пространства AutoCAD пересоздаёт ленту — добавляем вкладку заново.
             AcApp.SystemVariableChanged += OnSystemVariableChanged;
+
+            // Фоновое обновление марок панелей после растягивания, копирования и отмены.
+            PanelFieldUpdater.Start();
 
             // Версия и путь к DLL: сразу видно, какая копия плагина загружена
             // (установленная из .bundle или отладочная из bin\Debug).

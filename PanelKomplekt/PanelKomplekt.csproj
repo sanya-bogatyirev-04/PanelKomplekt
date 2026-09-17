@@ -14,6 +14,14 @@
     <Version>0.5.0</Version>
   </PropertyGroup>
 
+  <!--
+    Запись спецификации в Excel (.xlsx). ClosedXML 0.95.4 — последняя версия с отдельной сборкой под .NET Framework 4.6+:
+    всего четыре DLL (ClosedXML, DocumentFormat.OpenXml, ExcelNumberFormat, System.IO.Packaging) без пакетов-фасадов netstandard,
+    что снижает риск конфликтов с другими плагинами AutoCAD. Лицензия MIT.
+  -->
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
+  </ItemGroup>
 
   <!-- Библиотеки AutoCAD 2021 (локально или из NuGet) -->
   <Import Project="..\AutoCadReferences.props" />

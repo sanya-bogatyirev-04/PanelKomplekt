@@ -40,6 +40,7 @@ PanelKomplekt/                         корень репозитория
     ├── PanelKomplekt.csproj           версия плагина, иконки, подключение AutoCadReferences.props
     ├── start.scr                      NETLOAD собранной DLL при отладке
     ├── Properties/launchSettings.json запуск AutoCAD 2021 по F5 с PANELKOMPLEKT_DEV=1
+    ├── Blocks/PK_Panel.dwg            файл-шаблон динамического блока панели (копируется в bin\...\Blocks)
     ├── App.cs                         точка входа (IExtensionApplication), создание ленты
     ├── Core/                          общий код для всех команд
     │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка)
@@ -47,7 +48,10 @@ PanelKomplekt/                         корень репозитория
     │   ├── CommandRunner.cs           запуск тела команды с обработкой ошибок
     │   ├── IconLoader.cs              загрузка иконок кнопок из ресурсов DLL
     │   ├── PluginInfo.cs              сведения о плагине: версия, заказчик, разработчик, технологии
-    │   └── AcadWindow.cs              главное окно AutoCAD как владелец диалогов (MessageBox, формы)
+    │   ├── AcadWindow.cs              главное окно AutoCAD как владелец диалогов (MessageBox, формы)
+    │   ├── PanelBlock.cs              блок PK_Panel: имена параметров и атрибутов, добавление в чертёж из шаблона
+    │   ├── PanelData.cs               данные одной панели (длина, ширина, марка, тип, цвета, площадь)
+    │   └── PanelReader.cs             распознавание и чтение панелей из чертежа
     ├── Ribbon/                        лента
     │   ├── RibbonBuilder.cs           построение вкладки по CommandCatalog
     │   └── RibbonCommandHandler.cs    запуск команды AutoCAD по нажатию кнопки
@@ -56,10 +60,14 @@ PanelKomplekt/                         корень репозитория
         │   ├── C100_About.cs
         │   ├── C100_About.md
         │   └── C100_About_16.png / _32.png    иконки кнопки
-        └── C101_ShowElementId/        PK_C101_SHOWELEMENTID — ID выбранного элемента
-            ├── C101_ShowElementId.cs
-            ├── C101_ShowElementId.md
-            └── C101_ShowElementId_16.png / _32.png
+        ├── C101_ShowElementId/        PK_C101_SHOWELEMENTID — ID выбранного элемента
+        │   ├── C101_ShowElementId.cs
+        │   ├── C101_ShowElementId.md
+        │   └── C101_ShowElementId_16.png / _32.png
+        └── C102_PanelCheck/           PK_C102_PANELCHECK — проверка панелей PK_Panel
+            ├── C102_PanelCheck.cs
+            ├── C102_PanelCheck.md
+            └── C102_PanelCheck_16.png / _32.png
 ```
 
 ## Установочный архив
@@ -70,7 +78,8 @@ PanelKomplekt-<версия>.zip
 │   ├── PackageContents.xml
 │   └── Contents/
 │       ├── PanelKomplekt.Loader.dll   загружается AutoCAD при запуске
-│       └── PanelKomplekt.dll          основной плагин, загружается загрузчиком
+│       ├── PanelKomplekt.dll          основной плагин, загружается загрузчиком
+│       └── Blocks/PK_Panel.dwg        файл-шаблон блока панели
 ├── Install.cmd
 ├── Uninstall.cmd
 ├── Install.ps1
@@ -105,3 +114,16 @@ flowchart TD
 |---|---|---|---|---|
 | C100 | PK_C100_ABOUT | Сервис | Окно «О плагине»: версия, заказчик, разработчик, технологии | служебная |
 | C101 | PK_C101_SHOWELEMENTID | Сервис | ID выбранного элемента | тестовая |
+| C102 | PK_C102_PANELCHECK | Сервис | Проверка панелей: блок PK_Panel в чертеже и данные выбранных панелей | служебная |
+
+## Блок PK_Panel
+Динамический блок сэндвич-панели, файл-шаблон `PanelKomplekt/Blocks/PK_Panel.dwg`. Работа с ним в коде — только через `Core/PanelBlock.cs` и `Core/PanelReader.cs`.
+
+| Элемент | Значение |
+|---|---|
+| Геометрия | Замкнутая полилиния 5980 × 1190 мм, слой 0, свойства «ПоБлоку», базовая точка — левый нижний угол |
+| Параметр `Length` | Длина, мм: приращение 10, 10…13600, ручка справа |
+| Параметр `Width` | Ширина, мм: приращение 10, 100…2000, ручка сверху |
+| `PREFIX` | Буква марки (видимый), по умолчанию `П` |
+| `LENGTH_CM` | Длина в см (видимый): поле `Length` × 0.1, точность 0 |
+| `TYPE`, `RAL_OUT`, `SURFACE_OUT`, `RAL_IN`, `SURFACE_IN` | Тип и цвета (скрытые), по умолчанию `ПСБ-120`, `3005`, `накатка`, `9003`, `накатка` |

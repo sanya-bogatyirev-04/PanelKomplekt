@@ -36,10 +36,13 @@ param(
     [Parameter(Mandatory)] [string]$Title,
     [Parameter(Mandatory)] [string]$Panel,
     [Parameter(Mandatory)] [string]$RibbonText,
-    [string]$RepoRoot = (Split-Path $PSScriptRoot -Parent)
+    [string]$RepoRoot
 )
 
 $ErrorActionPreference = 'Stop'
+
+# В Windows PowerShell 5.1 $PSScriptRoot пуст в значениях параметров по умолчанию, поэтому корень вычисляется здесь.
+if (-not $RepoRoot) { $RepoRoot = Split-Path $PSScriptRoot -Parent }
 
 $FullName   = "${Number}_$Name"
 $GlobalName = "PK_${Number}_$($Name.ToUpperInvariant())"

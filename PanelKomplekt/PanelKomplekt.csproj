@@ -11,7 +11,7 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Версия A.B.C: A — глобальное обновление, B — изменения для пользователя, C — служебные (Docs/DevelopmentRules.md, п. 9) -->
-    <Version>0.3.1</Version>
+    <Version>0.4.0</Version>
   </PropertyGroup>
 
   <!-- Библиотеки AutoCAD 2021 (локально или из NuGet) -->
@@ -20,6 +20,11 @@
   <!-- Отладка (F5) настроена в Properties/launchSettings.json: запуск AutoCAD 2021 + start.scr -->
   <ItemGroup>
     <None Update="start.scr" CopyToOutputDirectory="Never" />
+  </ItemGroup>
+
+  <!-- Файл-шаблон блока панели PK_Panel: копируется в bin\<конфигурация>\Blocks, оттуда его читает Core/PanelBlock.cs -->
+  <ItemGroup>
+    <None Include="Blocks\PK_Panel.dwg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <!-- Иконки кнопок ленты: лежат в папках команд, встраиваются в DLL как Icons/<Key>_<размер>.png -->

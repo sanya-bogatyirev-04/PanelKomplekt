@@ -67,6 +67,14 @@ dotnet build PanelKomplekt.sln -c Debug
   ```
   Параметр `-PreviewPath` создаёт картинку предпросмотра на светлом и тёмном фоне ленты.
 
+### Блок PK_Panel
+- Файл-шаблон `PanelKomplekt/Blocks/PK_Panel.dwg` (AutoCAD 2018, мм) при сборке копируется в `bin\<конфигурация>\Blocks`, в установщике — в `Contents\Blocks`.
+- `Core/PanelBlock.EnsureDefinition` копирует блок в чертёж, если его там нет (`WblockCloneObjects`); существующее определение не перезаписывается.
+- `Core/PanelReader` распознаёт панели (у растянутого блока имя берётся из `DynamicBlockTableRecord`) и читает длину и ширину из динамических параметров, остальное — из атрибутов.
+- Состав блока — таблица в [ProjectStructure.md](ProjectStructure.md), раздел «Блок PK_Panel». Имена параметров `Length`, `Width` и теги атрибутов менять нельзя: на них опирается код.
+- Изменение блока: открыть `PK_Panel.dwg` в AutoCAD → `БЛОКРЕД` → правки → сохранить как DWG 2018. Проверка без AutoCAD: ODA File Converter → текстовый DXF.
+- Поле `LENGTH_CM` пересчитывается AutoCAD только при `РЕГЕН`, сохранении и открытии; мгновенное обновление после растягивания делает плагин (этап 2 плана).
+
 ## 6. Выпуск версии для заказчика
 1. В `PanelKomplekt/PanelKomplekt.csproj` поднимите `<Version>` по схеме `A.B.C` из [DevelopmentRules.md](DevelopmentRules.md), раздел 9 (A — глобальное обновление, B — изменения, заметные пользователю, C — служебные), допишите `CHANGELOG.md`.
 2. Соберите архив локально:

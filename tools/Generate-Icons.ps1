@@ -88,9 +88,30 @@ function Draw-ShowElementId([int]$Size) {
     $g.Dispose(); return $c.Bitmap
 }
 
+# C102 «Проверка панелей»: вопросительный знак.
+function Draw-PanelCheck([int]$Size) {
+    $c = New-Canvas $Size; $g = $c.Graphics
+    $brush = New-Object Drawing.SolidBrush($Blue)
+    $format = New-Object Drawing.StringFormat
+    $format.Alignment = [Drawing.StringAlignment]::Center
+    $format.LineAlignment = [Drawing.StringAlignment]::Center
+    # Знак рисуется векторным контуром (без тёмного ореола на прозрачном фоне), как надпись id в C101.
+    $family = New-Object Drawing.FontFamily('Segoe UI')
+    $path = New-Object Drawing.Drawing2D.GraphicsPath
+    if ($Size -eq 32) {
+        $path.AddString('?', $family, [int][Drawing.FontStyle]::Bold, 32.0, (New-Object Drawing.RectangleF(0.0, 1.0, 32.0, 32.0)), $format)
+    }
+    else {
+        $path.AddString('?', $family, [int][Drawing.FontStyle]::Bold, 17.0, (New-Object Drawing.RectangleF(0.0, 0.5, 16.0, 16.0)), $format)
+    }
+    $g.FillPath($brush, $path)
+    $g.Dispose(); return $c.Bitmap
+}
+
 $icons = [ordered]@{
     'C100_About'         = ${function:Draw-About}
     'C101_ShowElementId' = ${function:Draw-ShowElementId}
+    'C102_PanelCheck'    = ${function:Draw-PanelCheck}
 }
 
 $generated = @()

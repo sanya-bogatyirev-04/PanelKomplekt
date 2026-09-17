@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using PanelKomplekt.Commands;
 
 namespace PanelKomplekt.Core
@@ -14,6 +14,7 @@ namespace PanelKomplekt.Core
         {
             C100_About.Info,
             C101_ShowElementId.Info,
+            C102_PanelCheck.Info,
         };
     }
 }

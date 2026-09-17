@@ -46,6 +46,11 @@ $manifest = (Get-Content (Join-Path $Installer 'PackageContents.xml') -Raw -Enco
 [IO.File]::WriteAllText((Join-Path $Bundle 'PackageContents.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))
 
 Copy-Item $Dlls (Join-Path $Bundle 'Contents')
+
+# Файл-шаблон блока панели: плагин ищет его в Contents\Blocks рядом с PanelKomplekt.dll.
+$BlocksSource = Join-Path $Root 'PanelKomplekt\bin\Release\Blocks'
+if (-not (Test-Path (Join-Path $BlocksSource 'PK_Panel.dwg'))) { throw "Не найден файл блока: $BlocksSource\PK_Panel.dwg" }
+Copy-Item $BlocksSource (Join-Path $Bundle 'Contents') -Recurse
 foreach ($file in 'Install.cmd', 'Uninstall.cmd', 'Install.ps1', 'ReadMe.txt') {
     Copy-Item (Join-Path $Installer $file) $Package
 }

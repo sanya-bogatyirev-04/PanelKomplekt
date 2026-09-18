@@ -28,8 +28,8 @@ namespace PanelKomplekt.Commands
             Key = nameof(C102_PanelCheck),
             Number = "C102",
             GlobalName = GlobalName,
-            RibbonText = "Проверка панелей",
-            RibbonPanel = "Сервис",
+            RibbonText = "Проверка",
+            RibbonPanel = "Панели",
             Description = "Добавляет блок PK_Panel в чертёж и показывает данные выбранных панелей"
         };
 

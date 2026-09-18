@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 
@@ -25,9 +25,10 @@ namespace PanelKomplekt.Core
         /// <param name="rotation">Угол поворота вокруг нормали, радианы.</param>
         /// <param name="length">Длина, мм (будет приведена к правилам блока).</param>
         /// <param name="settings">Ширина, буква, тип и цвета.</param>
+        /// <param name="width">Ширина, мм: перекрывает settings.Width (нужна для последней укороченной панели массива).</param>
         /// <returns>Созданная вставка блока (открыта в транзакции).</returns>
         public static BlockReference Insert(Transaction tr, Database db, ObjectId spaceId, ObjectId definitionId,
-            Point3d position, Vector3d normal, double rotation, double length, PanelSettings settings)
+            Point3d position, Vector3d normal, double rotation, double length, PanelSettings settings, double? width = null)
         {
             var space = (BlockTableRecord)tr.GetObject(spaceId, OpenMode.ForWrite);
             var definition = (BlockTableRecord)tr.GetObject(definitionId, OpenMode.ForRead);
@@ -60,7 +61,7 @@ namespace PanelKomplekt.Core
 
             // 2. Размеры через динамические параметры (блок сам растянет прямоугольник и сдвинет марку).
             SetDynamicProperty(reference, PanelBlock.LengthParameter, PanelBlock.NormalizeLength(length));
-            SetDynamicProperty(reference, PanelBlock.WidthParameter, PanelBlock.NormalizeWidth(settings.Width));
+            SetDynamicProperty(reference, PanelBlock.WidthParameter, PanelBlock.NormalizeWidth(width ?? settings.Width));
 
             // 3. Поле длины пересчитывается сразу — марка правильная без РЕГЕН.
             PanelFieldRefresher.Refresh(reference, tr);

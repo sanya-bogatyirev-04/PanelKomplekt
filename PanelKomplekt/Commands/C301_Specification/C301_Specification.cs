@@ -30,7 +30,7 @@ namespace PanelKomplekt.Commands
             Key = nameof(C301_Specification),
             Number = "C301",
             GlobalName = GlobalName,
-            RibbonText = "Спецификация",
+            RibbonText = "Составить",
             RibbonPanel = "Спецификации",
             Description = "Спецификация панелей: Excel и/или таблица в чертеже"
         };

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Runtime;
 
@@ -17,8 +17,11 @@ namespace PanelKomplekt.Core
         /// <summary>Имя записи с настройками панелей.</summary>
         private const string RecordName = "PanelSettings";
 
-        /// <summary>Версия формата записи — для совместимости при будущих изменениях.</summary>
-        private const short FormatVersion = 1;
+        /// <summary>
+        /// Версия формата записи. 1 — восемь значений (без параметров массива), 2 — добавлены длина и зазор.
+        /// Записи версии 1 читаются по-прежнему, поэтому чертежи прежних версий плагина не теряют настройки.
+        /// </summary>
+        private const short FormatVersion = 2;
 
         /// <summary>Ширина панели, мм.</summary>
         public double Width { get; set; } = PanelBlock.DefaultWidth;
@@ -40,6 +43,12 @@ namespace PanelKomplekt.Core
 
         /// <summary>Покрытие внутри.</summary>
         public string SurfaceIn { get; set; } = string.Empty;
+
+        /// <summary>Длина панели для режима «массив», мм (в режиме «по одному» длина задаётся точками).</summary>
+        public double ArrayLength { get; set; } = PanelBlock.DefaultLength;
+
+        /// <summary>Зазор между соседними панелями в массиве, мм (0 — панели вплотную).</summary>
+        public double ArrayGap { get; set; }
 
         /// <summary>
         /// Значение атрибута для тега; для тегов без настройки (например, LENGTH_CM) — null.
@@ -72,7 +81,9 @@ namespace PanelKomplekt.Core
             if (dictionary == null || !dictionary.Contains(RecordName)) return settings;
             var record = tr.GetObject(dictionary.GetAt(RecordName), OpenMode.ForRead) as Xrecord;
             var values = record?.Data?.AsArray();
-            if (values == null || values.Length < 8 || Convert.ToInt16(values[0].Value) != FormatVersion) return settings;
+            if (values == null || values.Length < 8) return settings;
+            var version = Convert.ToInt16(values[0].Value);
+            if (version != 1 && version != FormatVersion) return settings;
 
             settings.Width = PanelBlock.NormalizeWidth(Convert.ToDouble(values[1].Value));
             settings.Prefix = Convert.ToString(values[2].Value);
@@ -81,6 +92,13 @@ namespace PanelKomplekt.Core
             settings.SurfaceOut = Convert.ToString(values[5].Value);
             settings.RalIn = Convert.ToString(values[6].Value);
             settings.SurfaceIn = Convert.ToString(values[7].Value);
+
+            // Параметры массива появились в версии 2: в записях версии 1 их нет, остаются значения по умолчанию.
+            if (version >= 2 && values.Length >= 10)
+            {
+                settings.ArrayLength = PanelBlock.NormalizeLength(Convert.ToDouble(values[8].Value));
+                settings.ArrayGap = PanelBlock.NormalizeGap(Convert.ToDouble(values[9].Value));
+            }
             return settings;
         }
 
@@ -111,7 +129,9 @@ namespace PanelKomplekt.Core
                 new TypedValue((int)DxfCode.Text, RalOut ?? string.Empty),
                 new TypedValue((int)DxfCode.Text, SurfaceOut ?? string.Empty),
                 new TypedValue((int)DxfCode.Text, RalIn ?? string.Empty),
-                new TypedValue((int)DxfCode.Text, SurfaceIn ?? string.Empty));
+                new TypedValue((int)DxfCode.Text, SurfaceIn ?? string.Empty),
+                new TypedValue((int)DxfCode.Real, ArrayLength),
+                new TypedValue((int)DxfCode.Real, ArrayGap));
 
             if (dictionary.Contains(RecordName))
             {

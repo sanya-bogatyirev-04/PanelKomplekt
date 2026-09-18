@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Autodesk.AutoCAD.DatabaseServices;
 
@@ -56,6 +56,12 @@ namespace PanelKomplekt.Core
         /// <summary>Ширина панели по умолчанию, мм (как в файле-шаблоне).</summary>
         public const double DefaultWidth = 1190;
 
+        /// <summary>Длина панели по умолчанию, мм (как в файле-шаблоне).</summary>
+        public const double DefaultLength = 5980;
+
+        /// <summary>Наибольший зазор между панелями в массиве, мм (ограничение формы, а не блока).</summary>
+        public const double MaxGap = 1000;
+
         /// <summary>Шаг изменения длины и ширины, мм (приращение параметров в блоке).</summary>
         public const double SizeStep = 10;
 
@@ -77,6 +83,11 @@ namespace PanelKomplekt.Core
         /// Ширина панели по правилам блока: кратно 10 мм, в пределах 100…2000 мм.
         /// </summary>
         public static double NormalizeWidth(double width) => Normalize(width, MinWidth, MaxWidth);
+
+        /// <summary>
+        /// Зазор между панелями в массиве: кратно 10 мм, в пределах 0…1000 мм.
+        /// </summary>
+        public static double NormalizeGap(double gap) => Normalize(gap, 0, MaxGap);
 
         /// <summary>
         /// Округление до шага <see cref="SizeStep"/> и ограничение диапазоном.

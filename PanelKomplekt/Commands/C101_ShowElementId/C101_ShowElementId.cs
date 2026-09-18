@@ -24,8 +24,8 @@ namespace PanelKomplekt.Commands
             Key = nameof(C101_ShowElementId),
             Number = "C101",
             GlobalName = GlobalName,
-            RibbonText = "ID элемента",
-            RibbonPanel = "Сервис",
+            RibbonText = "Поиск",
+            RibbonPanel = "Элементы",
             Description = "Показывает ID (дескриптор) выбранного элемента"
         };
 

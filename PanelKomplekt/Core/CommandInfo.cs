@@ -27,5 +27,12 @@ namespace PanelKomplekt.Core
 
         /// <summary>Краткое описание (всплывающая подсказка кнопки).</summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Адрес пользовательской страницы команды: открывается в браузере по F1,
+        /// когда курсор наведён на кнопку команды на ленте. Заполняется в <see cref="CommandCatalog"/>.
+        /// Пустое значение — у кнопки нет справки по F1.
+        /// </summary>
+        public string HelpUrl { get; set; }
     }
 }

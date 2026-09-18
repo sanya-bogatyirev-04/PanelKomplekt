@@ -9,6 +9,14 @@ namespace PanelKomplekt.Core
     /// </summary>
     public static class CommandCatalog
     {
+        /// <summary>
+        /// Начало адреса пользовательских страниц команд на GitHub. Страница blob показывает Markdown
+        /// с оформлением и открывается без входа в GitHub, пока репозиторий публичный.
+        /// Адрес ведёт на ветку master, поэтому у пользователя со старой версией плагина
+        /// откроется описание текущей версии.
+        /// </summary>
+        private const string HelpBaseUrl = "https://github.com/sanya-bogatyirev-04/PanelKomplekt/blob/master/Docs/Commands/";
+
         /// <summary>Все команды в порядке отображения на ленте.</summary>
         public static IReadOnlyList<CommandInfo> All { get; } = new[]
         {
@@ -20,5 +28,15 @@ namespace PanelKomplekt.Core
             C102_PanelCheck.Info,
             C301_Specification.Info,
         };
+
+        /// <summary>
+        /// Адрес справки для каждой команды: имя страницы совпадает с ключом команды,
+        /// поэтому в описании команды адрес не дублируется.
+        /// Статические поля инициализируются до тела статического конструктора, поэтому список All уже готов.
+        /// </summary>
+        static CommandCatalog()
+        {
+            foreach (var command in All) command.HelpUrl = HelpBaseUrl + command.Key + ".md";
+        }
     }
 }

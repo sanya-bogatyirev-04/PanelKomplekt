@@ -15,7 +15,13 @@ PanelKomplekt/                         корень репозитория
 ├── .gitignore / .gitattributes        настройки git (dist/ не хранится, *.dwg — двоичные)
 ├── .github/workflows/build.yml        автосборка на GitHub и релиз по тегу v*
 ├── Docs/                              документация
-│   ├── UserGuide.md                   руководство пользователя AutoCAD
+│   ├── UserGuide.md                   руководство пользователя: установка, общие правила, список команд
+│   ├── Commands/                      инструкции пользователя, по одной странице на команду
+│   │   ├── C100_About.md              открываются по F1 с кнопки на ленте (CommandInfo.HelpUrl)
+│   │   ├── C101_ShowElementId.md
+│   │   ├── C102_PanelCheck.md
+│   │   ├── C201_InsertPanel.md
+│   │   └── C301_Specification.md
 │   ├── DeveloperGuide.md              руководство разработчика
 │   ├── DevelopmentRules.md            обязательные правила разработки
 │   ├── ProjectStructure.md            этот файл
@@ -43,8 +49,8 @@ PanelKomplekt/                         корень репозитория
     ├── Blocks/PK_Panel.dwg            файл-шаблон динамического блока панели (копируется в bin\...\Blocks)
     ├── App.cs                         точка входа (IExtensionApplication), создание ленты
     ├── Core/                          общий код для всех команд
-    │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка)
-    │   ├── CommandCatalog.cs          список всех команд — источник кнопок ленты
+    │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка, адрес справки по F1)
+    │   ├── CommandCatalog.cs          список всех команд — источник кнопок ленты, адреса справки
     │   ├── CommandRunner.cs           запуск тела команды с обработкой ошибок
     │   ├── IconLoader.cs              загрузка иконок кнопок из ресурсов DLL
     │   ├── PluginInfo.cs              сведения о плагине: версия, заказчик, разработчик, технологии
@@ -57,7 +63,7 @@ PanelKomplekt/                         корень репозитория
     │   ├── PanelFieldRefresher.cs     пересчёт полей в атрибутах одной панели
     │   └── PanelFieldUpdater.cs       фоновое обновление марок после команд (растягивание, копирование, отмена)
     ├── Ribbon/                        лента
-    │   ├── RibbonBuilder.cs           построение вкладки по CommandCatalog
+    │   ├── RibbonBuilder.cs           построение вкладки по CommandCatalog, подсказки кнопок и справка по F1
     │   └── RibbonCommandHandler.cs    запуск команды AutoCAD по нажатию кнопки
     └── Commands/                      команды, каждая в своей папке
         ├── C100_About/                PK_C100_ABOUT — окно «О плагине»
@@ -126,7 +132,7 @@ flowchart TD
 
 1. Установленная версия: AutoCAD загружает `PanelKomplekt.Loader.dll`, он загружает `PanelKomplekt.dll`. Отладка (F5): загрузчик пропускает установленную версию, `start.scr` загружает DLL из `bin\Debug`. В обоих случаях вызывается `App.Initialize()`.
 2. `App` при первом простое вызывает `RibbonBuilder.Create()` (при смене рабочего пространства — повторно) и запускает `PanelFieldUpdater` — фоновое обновление марок панелей во всех чертежах.
-3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`).
+3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`). Каждой кнопке назначается своя подсказка `RibbonToolTip` с адресом страницы команды (`CommandInfo.HelpUrl`): по F1 её открывает встроенная справка AutoCAD.
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).
 5. AutoCAD вызывает метод с `[CommandMethod]` → тело команды выполняется через `CommandRunner.Run`.
 
@@ -134,7 +140,7 @@ flowchart TD
 | Номер | Имя в AutoCAD | Раздел ленты | Кнопка | Назначение | Статус |
 |---|---|---|---|---|---|
 | C100 | PK_C100_ABOUT | Сервис | О плагине | Окно «О плагине»: версия, заказчик, разработчик, технологии | служебная |
-| C101 | PK_C101_SHOWELEMENTID | Элементы | Поиск | ID выбранного элемента | тестовая |
+| C101 | PK_C101_SHOWELEMENTID | Элементы | Поиск | ID выбранного объекта чертежа | рабочая |
 | C201 | PK_C201_INSERTPANEL | Панели | Создание | Массив панелей вдоль линии или вставка по одной; фоновое обновление марок | рабочая |
 | C102 | PK_C102_PANELCHECK | Панели | Проверка | Проверка панелей: блок PK_Panel в чертеже и данные выбранных панелей | служебная |
 | C301 | PK_C301_SPECIFICATION | Спецификации | Составить | Спецификация панелей: Excel и/или таблица в чертеже | рабочая |

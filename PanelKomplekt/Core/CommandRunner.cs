@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Autodesk.AutoCAD.ApplicationServices;
 using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 
@@ -26,8 +26,16 @@ namespace PanelKomplekt.Core
             }
             catch (Exception ex)
             {
-                doc.Editor.WriteMessage($"\n[{info.Number}] Ошибка: {ex.Message}\n{ex}\n");
-                AcApp.ShowAlertDialog($"Команда {info.Number} завершилась с ошибкой:\n{ex.Message}");
+                // Пользователю — короткое сообщение, разработчику — стек вызовов в журнале:
+                // полный текст исключения в командной строке выглядит как сбой самого AutoCAD.
+                var logPath = PluginLog.WriteError(info.Number, ex);
+                var details = logPath == null
+                    ? "Подробности записать не удалось."
+                    : $"Подробности записаны в файл:\n{logPath}";
+
+                doc.Editor.WriteMessage($"\n[{info.Number}] Ошибка: {ex.Message}\n{details.Replace("\n", " ")}\n");
+                AcApp.ShowAlertDialog(
+                    $"Команда {info.Number} завершилась с ошибкой:\n{ex.Message}\n\n{details}");
             }
         }
     }

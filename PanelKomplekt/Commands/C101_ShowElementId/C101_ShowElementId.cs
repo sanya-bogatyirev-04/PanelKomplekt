@@ -9,8 +9,9 @@ using AcApp = Autodesk.AutoCAD.ApplicationServices.Application;
 namespace PanelKomplekt.Commands
 {
     /// <summary>
-    /// C101. Тестовая команда: пользователь выбирает один элемент,
+    /// C101. Поиск: пользователь выбирает один элемент,
     /// команда показывает всплывающее окно с его ID (дескриптор, Handle).
+    /// По этому ID панель из предупреждения спецификации находится в чертеже.
     /// Документация: C101_ShowElementId.md в папке команды.
     /// </summary>
     public class C101_ShowElementId

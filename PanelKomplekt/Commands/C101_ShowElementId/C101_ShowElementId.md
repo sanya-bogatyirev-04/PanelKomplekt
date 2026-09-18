@@ -6,7 +6,8 @@
 | Имя в AutoCAD | `PK_C101_SHOWELEMENTID` |
 | Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Элементы» → «Поиск» |
 | Файл кода | [C101_ShowElementId.cs](C101_ShowElementId.cs) |
-| Статус | тестовая |
+| Инструкция пользователя | [Docs/Commands/C101_ShowElementId.md](../../../Docs/Commands/C101_ShowElementId.md) |
+| Статус | рабочая |
 
 ## Назначение
 Проверка работы плагина и ленты: показывает ID выбранного элемента чертежа.

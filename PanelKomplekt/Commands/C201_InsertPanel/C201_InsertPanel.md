@@ -5,7 +5,7 @@
 | Номер | C201 |
 | Имя в AutoCAD | `PK_C201_INSERTPANEL` |
 | Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Панели» → «Создание» |
-| Файлы кода | [C201_InsertPanel.cs](C201_InsertPanel.cs), [PanelModeForm.cs](PanelModeForm.cs), [PanelArrayForm.cs](PanelArrayForm.cs), [PanelArrayPlanner.cs](PanelArrayPlanner.cs), [PanelJig.cs](PanelJig.cs) |
+| Файлы кода | [C201_InsertPanel.cs](C201_InsertPanel.cs) — точка входа, [ArrayPanelCreator.cs](ArrayPanelCreator.cs) и [SinglePanelCreator.cs](SinglePanelCreator.cs) — режимы, [PanelPlacement.cs](PanelPlacement.cs) — общие вычисления, [PanelModeForm.cs](PanelModeForm.cs), [PanelArrayForm.cs](PanelArrayForm.cs), [PanelArrayPlanner.cs](PanelArrayPlanner.cs), [PanelJig.cs](PanelJig.cs) |
 | Инструкция пользователя | [Docs/Commands/C201_InsertPanel.md](../../../Docs/Commands/C201_InsertPanel.md) |
 | Статус | рабочая |
 

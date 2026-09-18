@@ -52,6 +52,7 @@ PanelKomplekt/                         корень репозитория
     │   ├── CommandInfo.cs             описание команды (номер, имя, кнопка, адрес справки по F1)
     │   ├── CommandCatalog.cs          список всех команд — источник кнопок ленты, адреса справки
     │   ├── CommandRunner.cs           запуск тела команды с обработкой ошибок
+    │   ├── PluginLog.cs               журнал ошибок в %LOCALAPPDATA%\PanelKomplekt
     │   ├── IconLoader.cs              загрузка иконок кнопок из ресурсов DLL
     │   ├── PluginInfo.cs              сведения о плагине: версия, заказчик, разработчик, технологии
     │   ├── AcadWindow.cs              главное окно AutoCAD как владелец диалогов (MessageBox, формы)
@@ -79,7 +80,10 @@ PanelKomplekt/                         корень репозитория
         │   ├── C102_PanelCheck.md
         │   └── C102_PanelCheck_16.png / _32.png
         ├── C201_InsertPanel/          PK_C201_INSERTPANEL — создание панелей
-        │   ├── C201_InsertPanel.cs    команда: выбор режима, массив вдоль линии, вставка по одной
+        │   ├── C201_InsertPanel.cs    команда: блок, настройки, выбор режима
+        │   ├── ArrayPanelCreator.cs   режим «массив»: форма, три точки, вставка панелей
+        │   ├── SinglePanelCreator.cs  режим «по одному»: точки и опции командной строки
+        │   ├── PanelPlacement.cs      общее для обоих режимов: поворот, проекция, сохранение настроек
         │   ├── PanelModeForm.cs       окно выбора режима: массив или по одной панели
         │   ├── PanelArrayForm.cs      окно параметров массива: буква, длина, ширина, зазор, тип, цвета
         │   ├── PanelArrayPlanner.cs   расчёт раскладки без AutoCAD: смещения панелей и укороченная последняя
@@ -135,6 +139,7 @@ flowchart TD
 3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`). Каждой кнопке назначается своя подсказка `RibbonToolTip` с адресом страницы команды (`CommandInfo.HelpUrl`): по F1 её открывает встроенная справка AutoCAD.
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).
 5. AutoCAD вызывает метод с `[CommandMethod]` → тело команды выполняется через `CommandRunner.Run`.
+6. Ошибка внутри команды не доходит до AutoCAD: `CommandRunner` показывает короткое сообщение, а стек вызовов пишет через `PluginLog` в `%LOCALAPPDATA%\PanelKomplekt\PanelKomplekt.log`.
 
 ## Команды
 | Номер | Имя в AutoCAD | Раздел ленты | Кнопка | Назначение | Статус |

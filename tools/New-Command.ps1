@@ -131,7 +131,7 @@ $lines.Insert($closeIndex, "            $FullName.Info,")
 
 # 4. Строка в таблице команд: сразу после последней строки таблицы в разделе «## Команды»
 #    (после таблицы в файле могут идти другие разделы, поэтому дописывать в конец файла нельзя).
-$row = "| $Number | $GlobalName | $Panel | $Title | в разработке |"
+$row = "| $Number | $GlobalName | $Panel | $RibbonText | $Title | в разработке |"
 $structureLines = [Collections.Generic.List[string]]([IO.File]::ReadAllLines($Structure, $Utf8NoBom))
 $sectionIndex = -1
 for ($i = 0; $i -lt $structureLines.Count; $i++) { if ($structureLines[$i].Trim() -eq '## Команды') { $sectionIndex = $i; break } }

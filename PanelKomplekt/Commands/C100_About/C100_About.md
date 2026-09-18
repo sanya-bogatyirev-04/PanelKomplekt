@@ -6,6 +6,7 @@
 | Имя в AutoCAD | `PK_C100_ABOUT` |
 | Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Сервис» → «О плагине» |
 | Файл кода | [C100_About.cs](C100_About.cs) |
+| Инструкция пользователя | [Docs/Commands/C100_About.md](../../../Docs/Commands/C100_About.md) |
 | Статус | служебная |
 
 ## Назначение

@@ -6,6 +6,7 @@
 | Имя в AutoCAD | `PK_C102_PANELCHECK` |
 | Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Панели» → «Проверка» |
 | Файл кода | [C102_PanelCheck.cs](C102_PanelCheck.cs) |
+| Инструкция пользователя | [Docs/Commands/C102_PanelCheck.md](../../../Docs/Commands/C102_PanelCheck.md) |
 | Статус | служебная |
 
 ## Назначение

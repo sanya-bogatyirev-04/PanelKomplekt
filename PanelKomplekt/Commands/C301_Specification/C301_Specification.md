@@ -6,6 +6,7 @@
 | Имя в AutoCAD | `PK_C301_SPECIFICATION` |
 | Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Спецификации» → «Составить» |
 | Файлы кода | [C301_Specification.cs](C301_Specification.cs) (команда), [SpecificationModel.cs](SpecificationModel.cs) (модель), [SpecificationBuilder.cs](SpecificationBuilder.cs) (расчёт), [SpecificationExcelWriter.cs](SpecificationExcelWriter.cs) (Excel), [SpecificationTableWriter.cs](SpecificationTableWriter.cs) (таблица AutoCAD) |
+| Инструкция пользователя | [Docs/Commands/C301_Specification.md](../../../Docs/Commands/C301_Specification.md) |
 | Статус | рабочая |
 
 ## Назначение

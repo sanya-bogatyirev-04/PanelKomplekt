@@ -12,12 +12,13 @@ namespace PanelKomplekt.Core
         /// <summary>Все команды в порядке отображения на ленте.</summary>
         public static IReadOnlyList<CommandInfo> All { get; } = new[]
         {
-            // Рабочие команды — первыми, служебные — в конце вкладки.
-            C201_InsertPanel.Info,
-            C301_Specification.Info,
+            // Порядок разделов ленты: Сервис, Элементы, Панели, Спецификации.
+            // Команды с одинаковым RibbonPanel должны идти подряд — иначе раздел разделится на два.
             C100_About.Info,
             C101_ShowElementId.Info,
+            C201_InsertPanel.Info,
             C102_PanelCheck.Info,
+            C301_Specification.Info,
         };
     }
 }

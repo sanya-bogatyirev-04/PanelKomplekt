@@ -4,7 +4,7 @@
 |---|---|
 | Номер | C101 |
 | Имя в AutoCAD | `PK_C101_SHOWELEMENTID` |
-| Кнопка на ленте | вкладка «PanelKomplekt» → панель «Сервис» → «ID элемента» |
+| Кнопка на ленте | вкладка «PanelKomplekt» → раздел «Элементы» → «Поиск» |
 | Файл кода | [C101_ShowElementId.cs](C101_ShowElementId.cs) |
 | Статус | тестовая |
 

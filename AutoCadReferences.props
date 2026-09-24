@@ -1,7 +1,12 @@
 <Project>
   <!--
-    Общие ссылки на библиотеки AutoCAD 2021 для всех проектов решения.
+    Общие ссылки на библиотеки AutoCAD для всех проектов решения.
     Подключается в .csproj строкой <Import Project="..\AutoCadReferences.props" />.
+
+    Проекты собираются дважды (TargetFrameworks), каждая сборка — со своими библиотеками AutoCAD:
+      net48 — AutoCAD 2021 (R24.0); подходит для AutoCAD 2021–2024: у них общая платформа R24;
+      net47 — AutoCAD 2020 (R23.1): другая платформа и .NET Framework 4.7.
+    Библиотеки AutoCAD в папку сборки не копируются: в AutoCAD они уже есть.
   -->
 
   <PropertyGroup>
@@ -9,8 +14,8 @@
     <AcadDir Condition="'$(AcadDir)' == ''">C:\Program Files\Autodesk\AutoCAD 2021</AcadDir>
   </PropertyGroup>
 
-  <!-- Библиотеки из установленного AutoCAD 2021 (локальная разработка); в папку сборки не копируются -->
-  <ItemGroup Condition="Exists('$(AcadDir)\acmgd.dll')">
+  <!-- AutoCAD 2021–2024: библиотеки установленного AutoCAD 2021 (локальная разработка) -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48' And Exists('$(AcadDir)\acmgd.dll')">
     <Reference Include="AcCoreMgd">
       <HintPath>$(AcadDir)\accoremgd.dll</HintPath>
       <Private>False</Private>
@@ -29,8 +34,13 @@
     </Reference>
   </ItemGroup>
 
-  <!-- AutoCAD не установлен (например, сборка на GitHub): те же библиотеки из NuGet, в папку сборки не копируются -->
-  <ItemGroup Condition="!Exists('$(AcadDir)\acmgd.dll')">
+  <!-- AutoCAD 2021–2024 без установленного AutoCAD 2021 (например, сборка на GitHub): те же библиотеки из NuGet -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48' And !Exists('$(AcadDir)\acmgd.dll')">
     <PackageReference Include="AutoCAD.NET" Version="24.0.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <!-- AutoCAD 2020: всегда из NuGet, ставить AutoCAD 2020 для сборки не нужно -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
+    <PackageReference Include="AutoCAD.NET" Version="23.1.0" ExcludeAssets="runtime" />
   </ItemGroup>
 </Project>

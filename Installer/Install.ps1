@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Установка и удаление плагина PanelKomplekt для AutoCAD 2021.
+    Установка и удаление плагина PanelKomplekt для AutoCAD 2020, 2021 и 2022.
 
 .DESCRIPTION
     Копирует папку PanelKomplekt.bundle в C:\Program Files\Autodesk\ApplicationPlugins.
@@ -74,7 +74,7 @@ try {
     Get-ChildItem $TargetPath -Recurse -File | Unblock-File
 
     Write-Host "Плагин PanelKomplekt установлен в $TargetPath" -ForegroundColor Green
-    Write-Host 'Запустите AutoCAD 2021: на ленте появится вкладка «PanelKomplekt».'
+    Write-Host 'Запустите AutoCAD: на ленте появится вкладка «PanelKomplekt».'
     Exit-WithPause 0
 }
 catch {

@@ -56,7 +56,7 @@ namespace PanelKomplekt
             var assembly = typeof(App).Assembly;
             var doc = AcApp.DocumentManager.MdiActiveDocument;
             doc?.Editor.WriteMessage(
-                $"\n{PluginInfo.Name} {PluginInfo.Version} загружен из {assembly.Location}\n" +
+                $"\n{PluginInfo.Name} {PluginInfo.Version} (сборка для {PluginInfo.Platform}) загружен из {assembly.Location}\n" +
                 "Вкладка «PanelKomplekt» на ленте.\n");
         }
 

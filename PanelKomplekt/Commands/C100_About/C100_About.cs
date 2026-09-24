@@ -38,7 +38,7 @@ namespace PanelKomplekt.Commands
             CommandRunner.Run(Info, doc =>
             {
                 // Версия дублируется в командную строку: её удобно скопировать в сообщение об ошибке.
-                doc.Editor.WriteMessage($"\n{PluginInfo.Name} {PluginInfo.Version}\n");
+                doc.Editor.WriteMessage($"\n{PluginInfo.Name} {PluginInfo.Version} (сборка для {PluginInfo.Platform})\n");
 
                 MessageBox.Show(
                     AcadWindow.Main,
@@ -56,6 +56,7 @@ namespace PanelKomplekt.Commands
         {
             var text = new StringBuilder();
             text.AppendLine($"{PluginInfo.Name}, версия {PluginInfo.Version}");
+            text.AppendLine($"Сборка для {PluginInfo.Platform}");
             text.AppendLine(PluginInfo.Purpose);
             text.AppendLine();
             text.AppendLine($"Создан для: {PluginInfo.Customer}");

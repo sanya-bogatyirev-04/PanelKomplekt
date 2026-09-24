@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <!--
+      Две сборки из одного кода (Docs/DeveloperGuide.md, раздел «Версии AutoCAD»):
+        net48 — AutoCAD 2021–2024 (платформа R24), папка bin\<конфигурация>\net48;
+        net47 — AutoCAD 2020 (платформа R23.1), папка bin\<конфигурация>\net47.
+      net48 стоит первой: её Visual Studio запускает по F5.
+    -->
+    <TargetFrameworks>net48;net47</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <RootNamespace>PanelKomplekt</RootNamespace>
@@ -9,9 +15,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <!-- Версия A.B.C: A — глобальное обновление, B — изменения для пользователя, C — служебные (Docs/DevelopmentRules.md, п. 9) -->
-    <Version>1.0.0</Version>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <!--
@@ -23,7 +28,7 @@
     <PackageReference Include="ClosedXML" Version="0.95.4" />
   </ItemGroup>
 
-  <!-- Библиотеки AutoCAD 2021 (локально или из NuGet) -->
+  <!-- Библиотеки AutoCAD своей версии для каждой сборки (локально или из NuGet) -->
   <Import Project="..\AutoCadReferences.props" />
 
   <!-- Отладка (F5) настроена в Properties/launchSettings.json: запуск AutoCAD 2021 + start.scr -->
@@ -31,7 +36,7 @@
     <None Update="start.scr" CopyToOutputDirectory="Never" />
   </ItemGroup>
 
-  <!-- Файл-шаблон блока панели PK_Panel: копируется в bin\<конфигурация>\Blocks, оттуда его читает Core/PanelBlock.cs -->
+  <!-- Файл-шаблон блока панели PK_Panel: копируется в bin\<конфигурация>\<сборка>\Blocks, оттуда его читает Core/PanelBlock.cs -->
   <ItemGroup>
     <None Include="Blocks\PK_Panel.dwg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

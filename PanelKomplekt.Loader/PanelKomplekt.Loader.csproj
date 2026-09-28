@@ -7,14 +7,14 @@
     чтобы работала свежая сборка из bin\Debug.
   -->
   <PropertyGroup>
-    <!-- Те же две сборки, что у основного проекта: net48 — AutoCAD 2021–2024, net47 — AutoCAD 2020 -->
-    <TargetFrameworks>net48;net47</TargetFrameworks>
+    <!-- Те же сборки, что у основного проекта: net48 — AutoCAD 2021–2024, net47 — AutoCAD 2020, net46 — AutoCAD 2018 -->
+    <TargetFrameworks>net48;net47;net46</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <RootNamespace>PanelKomplekt.Loader</RootNamespace>
     <AssemblyName>PanelKomplekt.Loader</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <!-- Библиотеки AutoCAD своей версии для каждой сборки (локально или из NuGet) -->

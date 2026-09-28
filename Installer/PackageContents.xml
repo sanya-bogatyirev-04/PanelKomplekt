@@ -4,7 +4,8 @@
   Токен {{Version}} заменяется скриптом tools/Build-Bundle.ps1 на версию из PanelKomplekt.csproj.
   UpgradeCode не меняется никогда: по нему AutoCAD понимает, что это тот же плагин.
 
-  В пакете две сборки плагина. AutoCAD сам выбирает компонент, подходящий по номеру своей платформы:
+  В пакете три сборки плагина. AutoCAD сам выбирает компонент, подходящий по номеру своей платформы:
+    R22.0        — AutoCAD 2018,       папка Contents/R22 (сборка net46);
     R23.1        — AutoCAD 2020,       папка Contents/R23 (сборка net47);
     R24.0–R24.3  — AutoCAD 2021–2024,  папка Contents/R24 (сборка net48).
 -->
@@ -20,14 +21,25 @@
 
   <CompanyDetails Name="PanelKomplekt" />
 
-  <!-- Весь поддерживаемый диапазон: от AutoCAD 2020 (R23.1) до AutoCAD 2024 (R24.3) -->
-  <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R23.1" SeriesMax="R24.3" />
+  <!-- Весь поддерживаемый диапазон: от AutoCAD 2018 (R22.0) до AutoCAD 2024 (R24.3) -->
+  <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R22.0" SeriesMax="R24.3" />
 
   <!--
     Загрузка при запуске AutoCAD нужна, чтобы сразу появилась вкладка на ленте.
     Загружается загрузчик, а он — PanelKomplekt.dll из той же папки
     (при запуске из Visual Studio с PANELKOMPLEKT_DEV=1 загрузчик ничего не грузит).
   -->
+
+  <!-- AutoCAD 2018 -->
+  <Components Description="PanelKomplekt для AutoCAD 2018">
+    <RuntimeRequirements OS="Win64" Platform="AutoCAD*" SeriesMin="R22.0" SeriesMax="R22.0" />
+    <ComponentEntry
+      AppName="PanelKomplekt"
+      Version="{{Version}}"
+      ModuleName="./Contents/R22/PanelKomplekt.Loader.dll"
+      AppDescription="Раскладка сэндвич-панелей по фасадам и спецификация"
+      LoadOnAutoCADStartup="True" />
+  </Components>
 
   <!-- AutoCAD 2020 -->
   <Components Description="PanelKomplekt для AutoCAD 2020">

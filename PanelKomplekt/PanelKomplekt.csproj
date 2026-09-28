@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <!--
-      Две сборки из одного кода (Docs/DeveloperGuide.md, раздел «Версии AutoCAD»):
+      Три сборки из одного кода (Docs/DeveloperGuide.md, раздел «Версии AutoCAD»):
         net48 — AutoCAD 2021–2024 (платформа R24), папка bin\<конфигурация>\net48;
-        net47 — AutoCAD 2020 (платформа R23.1), папка bin\<конфигурация>\net47.
+        net47 — AutoCAD 2020 (платформа R23.1), папка bin\<конфигурация>\net47;
+        net46 — AutoCAD 2018 (платформа R22.0), папка bin\<конфигурация>\net46.
       net48 стоит первой: её Visual Studio запускает по F5.
     -->
-    <TargetFrameworks>net48;net47</TargetFrameworks>
+    <TargetFrameworks>net48;net47;net46</TargetFrameworks>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <RootNamespace>PanelKomplekt</RootNamespace>
@@ -16,7 +17,7 @@
     <UseWPF>true</UseWPF>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <!-- Версия A.B.C: A — глобальное обновление, B — изменения для пользователя, C — служебные (Docs/DevelopmentRules.md, п. 9) -->
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <!--

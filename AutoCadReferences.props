@@ -3,9 +3,10 @@
     Общие ссылки на библиотеки AutoCAD для всех проектов решения.
     Подключается в .csproj строкой <Import Project="..\AutoCadReferences.props" />.
 
-    Проекты собираются дважды (TargetFrameworks), каждая сборка — со своими библиотеками AutoCAD:
+    Проекты собираются трижды (TargetFrameworks), каждая сборка — со своими библиотеками AutoCAD:
       net48 — AutoCAD 2021 (R24.0); подходит для AutoCAD 2021–2024: у них общая платформа R24;
-      net47 — AutoCAD 2020 (R23.1): другая платформа и .NET Framework 4.7.
+      net47 — AutoCAD 2020 (R23.1): другая платформа и .NET Framework 4.7;
+      net46 — AutoCAD 2018 (R22.0): платформа R22 и .NET Framework 4.6.
     Библиотеки AutoCAD в папку сборки не копируются: в AutoCAD они уже есть.
   -->
 
@@ -42,5 +43,10 @@
   <!-- AutoCAD 2020: всегда из NuGet, ставить AutoCAD 2020 для сборки не нужно -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net47'">
     <PackageReference Include="AutoCAD.NET" Version="23.1.0" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+  <!-- AutoCAD 2018: всегда из NuGet, ставить AutoCAD 2018 для сборки не нужно -->
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <PackageReference Include="AutoCAD.NET" Version="22.0.0" ExcludeAssets="runtime" />
   </ItemGroup>
 </Project>

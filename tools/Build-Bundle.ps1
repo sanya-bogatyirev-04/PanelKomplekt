@@ -3,9 +3,10 @@
     Сборка установочного архива плагина PanelKomplekt.
 
 .DESCRIPTION
-    1. Собирает решение в конфигурации Release: две сборки из одного кода.
+    1. Собирает решение в конфигурации Release: три сборки из одного кода.
     2. Складывает в dist\PanelKomplekt папку PanelKomplekt.bundle:
          PackageContents.xml
+         Contents\R22 — сборка net46 для AutoCAD 2018;
          Contents\R23 — сборка net47 для AutoCAD 2020;
          Contents\R24 — сборка net48 для AutoCAD 2021–2024.
        В каждой папке — загрузчик, плагин, библиотеки для Excel и файл блока.
@@ -28,6 +29,7 @@ $Bundle    = Join-Path $Package 'PanelKomplekt.bundle'
 
 # Сборка → папка в пакете. Должно совпадать с TargetFrameworks в .csproj и с путями в PackageContents.xml.
 $Targets = [ordered]@{
+    'net46' = 'R22'   # AutoCAD 2018
     'net47' = 'R23'   # AutoCAD 2020
     'net48' = 'R24'   # AutoCAD 2021–2024
 }

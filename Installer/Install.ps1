@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Установка и удаление плагина PanelKomplekt для AutoCAD 2020, 2021 и 2022.
+    Установка и удаление плагина PanelKomplekt для AutoCAD 2018, 2020, 2021 и 2022.
 
 .DESCRIPTION
     Копирует папку PanelKomplekt.bundle в C:\Program Files\Autodesk\ApplicationPlugins.

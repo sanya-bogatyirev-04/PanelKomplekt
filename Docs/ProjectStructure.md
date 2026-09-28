@@ -1,13 +1,13 @@
 # Структура проекта PanelKomplekt
 
-Плагин для AutoCAD 2020, 2021 и 2022 (C#, x64). Две сборки из одного кода: `net48` — AutoCAD 2021–2024 (платформа R24),
-`net47` — AutoCAD 2020 (платформа R23.1). Обновляется при каждом изменении структуры.
+Плагин для AutoCAD 2018, 2020, 2021 и 2022 (C#, x64). Три сборки из одного кода: `net48` — AutoCAD 2021–2024 (платформа R24),
+`net47` — AutoCAD 2020 (платформа R23.1), `net46` — AutoCAD 2018 (платформа R22.0). Обновляется при каждом изменении структуры.
 
 ## Папки и файлы
 ```
 PanelKomplekt/                         корень репозитория
 ├── PanelKomplekt.sln                  решение VS 2022
-├── AutoCadReferences.props            библиотеки AutoCAD для каждой сборки: 2021 (локально или NuGet), 2020 (NuGet)
+├── AutoCadReferences.props            библиотеки AutoCAD для каждой сборки: 2021 (локально или NuGet), 2020 и 2018 (NuGet)
 ├── README.md                          главная страница: для пользователя и для программиста
 ├── CHANGELOG.md                       журнал изменений простым языком
 ├── LICENSE                            закрытый проект, все права защищены
@@ -44,7 +44,7 @@ PanelKomplekt/                         корень репозитория
 │   ├── PanelKomplekt.Loader.csproj
 │   └── LoaderApp.cs                   грузит PanelKomplekt.dll; при PANELKOMPLEKT_DEV=1 (отладка) — ничего
 └── PanelKomplekt/                     проект плагина
-    ├── PanelKomplekt.csproj           версия плагина, две сборки (net48, net47), иконки, подключение AutoCadReferences.props
+    ├── PanelKomplekt.csproj           версия плагина, три сборки (net48, net47, net46), иконки, подключение AutoCadReferences.props
     ├── start.scr                      NETLOAD отладочной сборки bin\Debug\net48 при отладке
     ├── Properties/launchSettings.json запуск AutoCAD 2021 по F5 с PANELKOMPLEKT_DEV=1
     ├── Blocks/PK_Panel.dwg            файл-шаблон динамического блока панели, формат AutoCAD 2018 (копируется в bin\...\Blocks)
@@ -108,6 +108,7 @@ PanelKomplekt-<версия>.zip
 ├── PanelKomplekt.bundle/
 │   ├── PackageContents.xml            какую папку загружать в какой версии AutoCAD
 │   └── Contents/
+│       ├── R22/                       сборка net46 — AutoCAD 2018, тот же состав, что у R23
 │       ├── R23/                       сборка net47 — AutoCAD 2020
 │       │   ├── PanelKomplekt.Loader.dll   загружается AutoCAD при запуске
 │       │   ├── PanelKomplekt.dll          основной плагин, загружается загрузчиком
@@ -127,7 +128,7 @@ PanelKomplekt-<версия>.zip
 ## Как работает плагин
 ```mermaid
 flowchart TD
-    A[Запуск AutoCAD] --> L["Автозагрузчик читает PackageContents.xml<br/>и загружает PanelKomplekt.Loader.dll<br/>из папки своей версии: R23 или R24"]
+    A[Запуск AutoCAD] --> L["Автозагрузчик читает PackageContents.xml<br/>и загружает PanelKomplekt.Loader.dll<br/>из папки своей версии: R22, R23 или R24"]
     L -->|обычный запуск| B["LoaderApp: ExtensionLoader.Load<br/>(PanelKomplekt.dll)"]
     L -->|"F5 из VS (PANELKOMPLEKT_DEV=1)"| S["Установленная версия пропущена;<br/>start.scr загружает bin\Debug\net48\PanelKomplekt.dll"]
     S --> C
@@ -140,7 +141,7 @@ flowchart TD
     H --> I["CommandRunner.Run:<br/>тело команды + перехват ошибок"]
 ```
 
-1. Установленная версия: AutoCAD по номеру своей платформы выбирает в `PackageContents.xml` папку `Contents\R23` (2020) или `Contents\R24` (2021–2024) и загружает оттуда `PanelKomplekt.Loader.dll`, а он — `PanelKomplekt.dll` из той же папки. Отладка (F5): загрузчик пропускает установленную версию, `start.scr` загружает DLL из `bin\Debug\net48`. В обоих случаях вызывается `App.Initialize()`.
+1. Установленная версия: AutoCAD по номеру своей платформы выбирает в `PackageContents.xml` папку `Contents\R22` (2018), `Contents\R23` (2020) или `Contents\R24` (2021–2024) и загружает оттуда `PanelKomplekt.Loader.dll`, а он — `PanelKomplekt.dll` из той же папки. Отладка (F5): загрузчик пропускает установленную версию, `start.scr` загружает DLL из `bin\Debug\net48`. В обоих случаях вызывается `App.Initialize()`.
 2. `App` при первом простое вызывает `RibbonBuilder.Create()` (при смене рабочего пространства — повторно) и запускает `PanelFieldUpdater` — фоновое обновление марок панелей во всех чертежах.
 3. `RibbonBuilder` берёт список из `CommandCatalog` и создаёт кнопки, сгруппированные по панелям; иконки берёт `IconLoader` по ключу команды (`CommandInfo.Key`). Каждой кнопке назначается своя подсказка `RibbonToolTip` с адресом страницы команды (`CommandInfo.HelpUrl`): по F1 её открывает встроенная справка AutoCAD.
 4. Нажатие кнопки → `RibbonCommandHandler` отправляет в AutoCAD имя команды (`GlobalName`).
@@ -161,7 +162,7 @@ flowchart TD
 
 | Элемент | Значение |
 |---|---|
-| Формат файла | AutoCAD 2018 (`AC1032`): читается в AutoCAD 2018–2024, в том числе 2020, 2021 и 2022 |
+| Формат файла | AutoCAD 2018 (`AC1032`): читается в AutoCAD 2018–2024, то есть во всех поддерживаемых версиях |
 | Геометрия | Замкнутая полилиния 5980 × 1190 мм, слой 0, свойства «ПоБлоку», базовая точка — левый нижний угол |
 | Параметр `Length` | Длина, мм: приращение 10, 10…13600, ручка справа |
 | Параметр `Width` | Ширина, мм: приращение 10, 100…2000, ручка сверху |
